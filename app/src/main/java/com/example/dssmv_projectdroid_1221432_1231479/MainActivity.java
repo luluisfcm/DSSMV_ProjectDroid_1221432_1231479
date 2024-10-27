@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Create the API instance
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
-
+        System.out.println(api);
         // Make the API call
         api.getLibraries().enqueue(new Callback<List<Library>>() {
             @Override

@@ -11,6 +11,6 @@ public class LibrariesActivity {
 
         Call<List<Library>> call = api.getLibraries();
 
-
+        System.out.println(api);
     }
 }
