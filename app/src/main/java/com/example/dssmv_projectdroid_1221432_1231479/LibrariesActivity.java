@@ -14,6 +14,7 @@ import java.util.List;
 public class LibrariesActivity extends AppCompatActivity {
     private List<Library> libraries;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,8 @@ public class LibrariesActivity extends AppCompatActivity {
         fetchLibraries(); // Chama o método para buscar as bibliotecas
     }
 
-    private void fetchLibraries() {
+    private void fetchLibraries(){
+
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/library/").create(LibraryApi.class);
         Call<List<Library>> call = api.getLibraries();
 
@@ -62,7 +64,7 @@ public class LibrariesActivity extends AppCompatActivity {
                     .append("Statement: ").append(library.getOpenStatement()).append("\n\n");
         }
 
-        // Certifique-se de que o ID do TextView está correto e não está comentado
+
         TextView tvLibraryData = findViewById(R.id.tvLibraryData);
         tvLibraryData.setText(data.toString());
     }
