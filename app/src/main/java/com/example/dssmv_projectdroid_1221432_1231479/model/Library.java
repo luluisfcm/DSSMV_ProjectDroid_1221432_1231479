@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Library {
 
-    private UUID id;
+    //private UUID id;
     private String address;
     //private LocalTime closeTime;
     private String name;
@@ -16,8 +16,7 @@ public class Library {
 
     public Library(String address, String name, boolean open, String openDays, String openStatement) {
         this.address = address;
-        //7this.closeTime = closeTime;
-        this.id = UUID.randomUUID(); // Gera um UUID automaticamente
+        //this.closeTime = closeTime;
         this.name = name;
         this.open = open;
         this.openDays = openDays;
@@ -38,13 +37,13 @@ public class Library {
 //        return closeTime;
 //    }
 
-    //public void setCloseTime(LocalTime closeTime) {
+//    public void setCloseTime(LocalTime closeTime) {
 //        this.closeTime = closeTime;
 //    }
 
-    public UUID getId() {
-        return id;
-    }
+//    public UUID getId() {
+//        return id;
+//    }
 
     public String getName() {
         return name;
@@ -91,7 +90,7 @@ public class Library {
         return "Library{" +
                 "address='" + address + '\'' +
                 //", closeTime=" + closeTime +
-                ", id=" + id +
+                //", id=" + id +
                 ", name='" + name + '\'' +
                 ", open=" + open +
                 ", openDays='" + openDays + '\'' +
