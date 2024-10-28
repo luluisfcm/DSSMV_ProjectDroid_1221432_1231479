@@ -1,30 +1,32 @@
 package com.example.dssmv_projectdroid_1221432_1231479.model;
 
-//import java.time.LocalTime;
-import java.util.UUID;
+import java.time.LocalTime;
 
 public class Library {
 
+    private String id;
     //private UUID id;
     private String address;
-    //private LocalTime closeTime;
+    private LocalTime closeTime;
     private String name;
     private boolean open;
     private String openDays;
     private String openStatement;
-    //private LocalTime openTime;
+    private LocalTime openTime;
 
     public Library(String address, String name, boolean open, String openDays, String openStatement) {
         this.address = address;
+
+        this.closeTime = closeTime;
         //this.closeTime = closeTime;
         this.name = name;
         this.open = open;
         this.openDays = openDays;
         this.openStatement = openStatement;
-        //this.openTime = openTime;
+        this.openTime = openTime;
     }
 
-    // Getters e Setters
+     //Getters e Setters
     public String getAddress() {
         return address;
     }
@@ -33,9 +35,18 @@ public class Library {
         this.address = address;
     }
 
-//    public LocalTime getCloseTime() {
-//        return closeTime;
-//    }
+    public LocalTime getCloseTime() {
+        return closeTime;
+    }
+
+
+    public void setCloseTime(LocalTime closeTime) {
+        this.closeTime = closeTime;
+    }
+
+    public String getId() {
+        return id;
+    }
 
 //    public void setCloseTime(LocalTime closeTime) {
 //        this.closeTime = closeTime;
@@ -77,25 +88,28 @@ public class Library {
         this.openStatement = openStatement;
     }
 
-//    public LocalTime getOpenTime() {
-//        return openTime;
-//    }
-//
-//    public void setOpenTime(LocalTime openTime) {
-//        this.openTime = openTime;
-//    }
+    public LocalTime getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(LocalTime openTime) {
+        this.openTime = openTime;
+    }
 
     @Override
     public String toString() {
         return "Library{" +
-                "address='" + address + '\'' +
+                "address='" + address + '\'' 
+                ", closeTime=" + closeTime +
+                ", id=" + id +
+
                 //", closeTime=" + closeTime +
                 //", id=" + id +
                 ", name='" + name + '\'' +
                 ", open=" + open +
                 ", openDays='" + openDays + '\'' +
                 ", openStatement='" + openStatement + '\'' +
-                //", openTime=" + openTime +
+                ", openTime=" + openTime +
                 '}';
     }
 }

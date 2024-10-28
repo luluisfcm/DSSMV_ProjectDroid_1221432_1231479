@@ -1,6 +1,7 @@
-package com.example.dssmv_projectdroid_1221432_1231479;
-
+package com.example.dssmv_projectdroid_1221432_1231479;// MainActivity.java
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import retrofit2.Callback;
 import retrofit2.Call;
 import retrofit2.Response;
 import android.widget.TextView;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        // Navigate to LibrariesActivity when a button is clicked
+        findViewById(R.id.button_view_libraries).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LibrariesActivity.class);
+                startActivity(intent);
+            }
+        });
 
         libraryRepository = new LibraryRepository();
         fetchAndDisplayLibraries();
@@ -78,5 +90,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tvLibraryData = findViewById(R.id.tvLibraryData);
         tvLibraryData.setText(data.toString());
+
     }
 }
