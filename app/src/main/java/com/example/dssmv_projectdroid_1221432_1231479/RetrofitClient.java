@@ -10,7 +10,7 @@ public class RetrofitClient {
 
     public static Retrofit getClient(String baseUrl) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY); // Log the request and response bodies
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY); // Log da requisição e resposta
 
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(logging)

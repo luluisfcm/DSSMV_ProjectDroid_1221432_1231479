@@ -99,10 +99,9 @@ public class Library {
     @Override
     public String toString() {
         return "Library{" +
-                "address='" + address + '\'' 
+                "address='" + address + '\'' +
                 ", closeTime=" + closeTime +
                 ", id=" + id +
-
                 //", closeTime=" + closeTime +
                 //", id=" + id +
                 ", name='" + name + '\'' +

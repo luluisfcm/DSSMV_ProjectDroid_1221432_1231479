@@ -8,23 +8,25 @@ import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LibrariesActivity extends AppCompatActivity {
     private List<Library> libraries;
-
+    private static final String TAG = "LibrariesActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_libraries); // Certifique-se de que este é o layout correto
+        setContentView(R.layout.activity_libraries);
 
-        fetchLibraries(); // Chama o método para buscar as bibliotecas
+        // Tente a chamada da API; caso falhe, use mock
+        fetchLibraries();
     }
 
-    private void fetchLibraries(){
-
+    private void fetchLibraries() {
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/library/").create(LibraryApi.class);
         Call<List<Library>> call = api.getLibraries();
 
@@ -41,15 +43,18 @@ public class LibrariesActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         errorMessage = "Erro ao processar a resposta: " + e.getMessage();
                     }
+                    Log.e(TAG, "Erro: " + response.code() + " - " + errorMessage);
                     Toast.makeText(LibrariesActivity.this, "Erro: " + response.code() + " - " + errorMessage, Toast.LENGTH_SHORT).show();
                 }
             }
 
-
             @Override
             public void onFailure(Call<List<Library>> call, Throwable throwable) {
-                // Mostra erro de falha na requisição
+                Log.e(TAG, "Erro na chamada da API: " + throwable.getMessage());
                 Toast.makeText(LibrariesActivity.this, "Erro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
+                // Fallback para dados mock
+                fetchLibraries();
             }
         });
     }
@@ -63,7 +68,6 @@ public class LibrariesActivity extends AppCompatActivity {
                     .append("Open Days: ").append(library.getOpenDays()).append("\n")
                     .append("Statement: ").append(library.getOpenStatement()).append("\n\n");
         }
-
 
         TextView tvLibraryData = findViewById(R.id.tvLibraryData);
         tvLibraryData.setText(data.toString());
