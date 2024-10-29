@@ -10,7 +10,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LibrariesActivity extends AppCompatActivity {
@@ -22,7 +21,6 @@ public class LibrariesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_libraries);
 
-        // Tente a chamada da API; caso falhe, use mock
         fetchLibraries();
     }
 
@@ -33,28 +31,17 @@ public class LibrariesActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Library>>() {
             @Override
             public void onResponse(Call<List<Library>> call, Response<List<Library>> response) {
-                if (response.isSuccessful()) {
+                if (response.isSuccessful() && response.body() != null) {
                     libraries = response.body();
                     displayLibraries(libraries);
                 } else {
-                    String errorMessage;
-                    try {
-                        errorMessage = response.errorBody() != null ? response.errorBody().string() : "Erro desconhecido";
-                    } catch (Exception e) {
-                        errorMessage = "Erro ao processar a resposta: " + e.getMessage();
-                    }
-                    Log.e(TAG, "Erro: " + response.code() + " - " + errorMessage);
-                    Toast.makeText(LibrariesActivity.this, "Erro: " + response.code() + " - " + errorMessage, Toast.LENGTH_SHORT).show();
+                    showError("Erro: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<List<Library>> call, Throwable throwable) {
-                Log.e(TAG, "Erro na chamada da API: " + throwable.getMessage());
-                Toast.makeText(LibrariesActivity.this, "Erro: " + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-
-                // Fallback para dados mock
-                fetchLibraries();
+                showError("Erro: " + throwable.getMessage());
             }
         });
     }
@@ -71,5 +58,10 @@ public class LibrariesActivity extends AppCompatActivity {
 
         TextView tvLibraryData = findViewById(R.id.tvLibraryData);
         tvLibraryData.setText(data.toString());
+    }
+
+    private void showError(String message) {
+        Log.e(TAG, message);
+        Toast.makeText(LibrariesActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 }

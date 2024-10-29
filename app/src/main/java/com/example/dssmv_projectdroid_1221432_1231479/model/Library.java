@@ -5,20 +5,23 @@ import java.time.LocalTime;
 public class Library {
 
     private String id;
-    //private UUID id;
     private String address;
     private LocalTime closeTime;
     private String name;
     private boolean open;
     private String openDays;
     private String openStatement;
-    private LocalTime openTime;
+    private Time openTime;
+
+    public class Time {
+        private int hour;
+        private int minute;
+        private int nano;
+        private int second;
+    }
 
     public Library(String address, String name, boolean open, String openDays, String openStatement) {
         this.address = address;
-
-        this.closeTime = closeTime;
-        //this.closeTime = closeTime;
         this.name = name;
         this.open = open;
         this.openDays = openDays;
@@ -47,14 +50,6 @@ public class Library {
     public String getId() {
         return id;
     }
-
-//    public void setCloseTime(LocalTime closeTime) {
-//        this.closeTime = closeTime;
-//    }
-
-//    public UUID getId() {
-//        return id;
-//    }
 
     public String getName() {
         return name;
@@ -88,12 +83,8 @@ public class Library {
         this.openStatement = openStatement;
     }
 
-    public LocalTime getOpenTime() {
+    public Time getOpenTime() {
         return openTime;
-    }
-
-    public void setOpenTime(LocalTime openTime) {
-        this.openTime = openTime;
     }
 
     @Override
@@ -102,8 +93,6 @@ public class Library {
                 "address='" + address + '\'' +
                 ", closeTime=" + closeTime +
                 ", id=" + id +
-                //", closeTime=" + closeTime +
-                //", id=" + id +
                 ", name='" + name + '\'' +
                 ", open=" + open +
                 ", openDays='" + openDays + '\'' +
