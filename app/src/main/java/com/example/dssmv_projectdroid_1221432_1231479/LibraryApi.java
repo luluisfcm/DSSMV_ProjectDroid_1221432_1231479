@@ -1,8 +1,6 @@
 package com.example.dssmv_projectdroid_1221432_1231479;
 
 import java.util.List;
-import java.util.UUID;
-
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,23 +12,24 @@ import retrofit2.http.Path;
 
 public interface LibraryApi {
 
-    // Obter uma lista de todas as bibliotecas
-    @GET("libraries")
+    // Endpoint para obter a lista de bibliotecas
+    @GET("library")
     Call<List<Library>> getLibraries();
 
-    // Obter uma biblioteca pelo ID
+
+    // Obter uma biblioteca por ID (UUID)
     @GET("libraries/{id}")
-    Call<Library> getLibraryById(@Path("id") UUID id);
+    Call<Library> getLibraryById(@Path("id") String id);
 
     // Adicionar uma nova biblioteca
     @POST("libraries")
     Call<Library> addLibrary(@Body Library library);
 
-    // Atualizar uma biblioteca existente
+    // Atualizar uma biblioteca existente (UUID)
     @PUT("libraries/{id}")
-    Call<Library> updateLibrary(@Path("id") UUID id, @Body Library library);
+    Call<Library> updateLibrary(@Path("id") String id, @Body Library library);
 
-    // Remover uma biblioteca pelo ID
+    // Remover uma biblioteca por ID (UUID)
     @DELETE("libraries/{id}")
-    Call<Void> removeLibrary(@Path("id") UUID id);
+    Call<Void> removeLibrary(@Path("id") String id);
 }
