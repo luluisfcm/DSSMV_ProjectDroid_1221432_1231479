@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
+import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -25,7 +27,7 @@ public class LibrariesActivity extends AppCompatActivity {
     }
 
     private void fetchLibraries() {
-        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/library/").create(LibraryApi.class);
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
         Call<List<Library>> call = api.getLibraries();
 
         call.enqueue(new Callback<List<Library>>() {

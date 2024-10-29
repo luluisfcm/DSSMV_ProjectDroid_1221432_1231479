@@ -1,4 +1,5 @@
-package com.example.dssmv_projectdroid_1221432_1231479;
+// RetrofitClient.java
+package com.example.dssmv_projectdroid_1221432_1231479.api;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -18,7 +19,7 @@ public class RetrofitClient {
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(baseUrl)
+                    .baseUrl(baseUrl) // URL base definitiva
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();

@@ -6,12 +6,12 @@ public class Library {
 
     private String id;
     private String address;
-    private LocalTime closeTime;
     private String name;
     private boolean open;
     private String openDays;
     private String openStatement;
-    private Time openTime;
+    private String openTime;
+    private String closeTime;
 
     public class Time {
         private int hour;
@@ -38,12 +38,12 @@ public class Library {
         this.address = address;
     }
 
-    public LocalTime getCloseTime() {
+    public String getCloseTime() {
         return closeTime;
     }
 
 
-    public void setCloseTime(LocalTime closeTime) {
+    public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
     }
 
@@ -83,7 +83,7 @@ public class Library {
         this.openStatement = openStatement;
     }
 
-    public Time getOpenTime() {
+    public String getOpenTime() {
         return openTime;
     }
 
