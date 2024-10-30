@@ -1,37 +1,49 @@
 package com.example.dssmv_projectdroid_1221432_1231479;
 
+import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
+import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.util.Log;
 
 import java.util.List;
 
 public class LibrariesActivity extends AppCompatActivity {
     private List<Library> libraries;
+    private static final String TAG = "LibrariesActivity";
 
-    private void fetchLibraries(){
-        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/library/").create(LibraryApi.class);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_libraries);
+
+        fetchLibraries();
+    }
+
+    private void fetchLibraries() {
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
         Call<List<Library>> call = api.getLibraries();
 
         call.enqueue(new Callback<List<Library>>() {
             @Override
             public void onResponse(Call<List<Library>> call, Response<List<Library>> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful() && response.body() != null) {
                     libraries = response.body();
                     displayLibraries(libraries);
                 } else {
-                    //Toast.makeText(LibrariesActivity.this, "asdasd", Toast.LENGTH_SHORT).show();
+                    showError("Erro: " + response.code());
                 }
-
             }
 
             @Override
             public void onFailure(Call<List<Library>> call, Throwable throwable) {
-
+                showError("Erro: " + throwable.getMessage());
             }
         });
     }
@@ -50,4 +62,8 @@ public class LibrariesActivity extends AppCompatActivity {
         tvLibraryData.setText(data.toString());
     }
 
+    private void showError(String message) {
+        Log.e(TAG, message);
+        Toast.makeText(LibrariesActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
 }
