@@ -1,6 +1,11 @@
 package com.example.dssmv_projectdroid_1221432_1231479;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,17 +54,38 @@ public class LibrariesActivity extends AppCompatActivity {
     }
 
     private void displayLibraries(List<Library> libraries) {
-        StringBuilder data = new StringBuilder();
+        // Find the LinearLayout container for adding each library entry as a separate view
+        LinearLayout container = findViewById(R.id.containerLibraryData);
+        container.removeAllViews(); // Clear existing entries
+
         for (Library library : libraries) {
-            data.append("Library Name: ").append(library.getName()).append("\n")
-                    .append("Address: ").append(library.getAddress()).append("\n")
+            // Create a new TextView for each library entry
+            TextView libraryView = new TextView(this);
+            libraryView.setTextSize(16);
+            libraryView.setTextColor(getResources().getColor(android.R.color.black));
+            libraryView.setBackgroundResource(R.drawable.library_item_background); // Set the blue background
+            libraryView.setPadding(16, 16, 16, 16);
+
+            // Format the library data with bold name
+            SpannableStringBuilder data = new SpannableStringBuilder();
+            String nameText = "Library Name: " + library.getName() + "\n";
+            data.append(nameText);
+            data.setSpan(new StyleSpan(Typeface.BOLD), 0, nameText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            data.append("Address: ").append(library.getAddress()).append("\n")
                     .append("Open Status: ").append(library.isOpen() ? "Open" : "Closed").append("\n")
                     .append("Open Days: ").append(library.getOpenDays()).append("\n")
-                    .append("Statement: ").append(library.getOpenStatement()).append("\n\n");
-        }
+                    .append("Statement: ").append(library.getOpenStatement()).append("\n");
 
-        TextView tvLibraryData = findViewById(R.id.tvLibraryData);
-        tvLibraryData.setText(data.toString());
+            libraryView.setText(data);
+
+            // Add the TextView to the container layout
+            container.addView(libraryView);
+
+            // Add margin to separate each library entry visually
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) libraryView.getLayoutParams();
+            params.setMargins(0, 0, 0, 16); // Margin at the bottom
+            libraryView.setLayoutParams(params);
+        }
     }
 
     private void showError(String message) {
