@@ -1,4 +1,9 @@
-package com.example.dssmv_projectdroid_1221432_1231479;
+package com.example.dssmv_projectdroid_1221432_1231479.ui;
+import android.content.Intent;
+import com.example.dssmv_projectdroid_1221432_1231479.R;
+import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
+import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,9 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
-import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,19 +56,16 @@ public class LibrariesActivity extends AppCompatActivity {
     }
 
     private void displayLibraries(List<Library> libraries) {
-        // Find the LinearLayout container for adding each library entry as a separate view
         LinearLayout container = findViewById(R.id.containerLibraryData);
-        container.removeAllViews(); // Clear existing entries
+        container.removeAllViews();
 
         for (Library library : libraries) {
-            // Create a new TextView for each library entry
             TextView libraryView = new TextView(this);
             libraryView.setTextSize(16);
             libraryView.setTextColor(getResources().getColor(android.R.color.black));
-            libraryView.setBackgroundResource(R.drawable.library_item_background); // Set the blue background
+            libraryView.setBackgroundResource(R.drawable.library_item_background);
             libraryView.setPadding(16, 16, 16, 16);
 
-            // Format the library data with bold name
             SpannableStringBuilder data = new SpannableStringBuilder();
             String nameText = "Library Name: " + library.getName() + "\n";
             data.append(nameText);
@@ -78,12 +77,21 @@ public class LibrariesActivity extends AppCompatActivity {
 
             libraryView.setText(data);
 
-            // Add the TextView to the container layout
+            // Set click listener to navigate to the detail page
+            libraryView.setOnClickListener(v -> {
+                Intent intent = new Intent(this, LibraryDetailActivity.class);
+                intent.putExtra("library_name", library.getName());
+                intent.putExtra("library_address", library.getAddress());
+                intent.putExtra("is_open", library.isOpen());
+                intent.putExtra("open_days", library.getOpenDays());
+                intent.putExtra("open_statement", library.getOpenStatement());
+                startActivity(intent);
+            });
+
             container.addView(libraryView);
 
-            // Add margin to separate each library entry visually
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) libraryView.getLayoutParams();
-            params.setMargins(0, 0, 0, 16); // Margin at the bottom
+            params.setMargins(0, 0, 0, 16);
             libraryView.setLayoutParams(params);
         }
     }

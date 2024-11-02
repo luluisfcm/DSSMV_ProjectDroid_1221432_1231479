@@ -16,7 +16,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.DSSMV_ProjectDroid_1221432_1231479">
 
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity android:name=".ui.MainActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,7 +24,10 @@
         </activity>
 
         <!-- LibrariesActivity declaration -->
-        <activity android:name=".LibrariesActivity"
+        <activity android:name=".ui.LibrariesActivity"
         android:label="Bibliotecas"/>
+
+        <activity android:name=".ui.LibraryDetailActivity"
+                  android:label="Livros"/>
     </application>
 </manifest>

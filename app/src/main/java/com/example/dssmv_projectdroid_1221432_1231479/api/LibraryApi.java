@@ -18,7 +18,7 @@ public interface LibraryApi {
     Call<List<Library>> getLibraries();
 
     // Outros endpoints
-    @GET("libraries/{id}")
+    @GET("libraries/{id}/book")
     Call<Library> getLibraryById(@Path("id") String id);
 
     @POST("libraries")
