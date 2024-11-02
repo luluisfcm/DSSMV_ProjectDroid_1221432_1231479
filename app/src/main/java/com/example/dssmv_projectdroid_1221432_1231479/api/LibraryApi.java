@@ -3,6 +3,7 @@ package com.example.dssmv_projectdroid_1221432_1231479.api;
 
 import java.util.List;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
+import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -17,16 +18,15 @@ public interface LibraryApi {
     @GET("library") // Definido para coincidir com a URL base completa
     Call<List<Library>> getLibraries();
 
-    // Outros endpoints
-    @GET("libraries/{id}/book")
-    Call<Library> getLibraryById(@Path("id") String id);
+    @GET("library/{id}/book?limit=7")
+    Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
-    @POST("libraries")
+    @POST("library")
     Call<Library> addLibrary(@Body Library library);
 
-    @PUT("libraries/{id}")
+    @PUT("library/{id}")
     Call<Library> updateLibrary(@Path("id") String id, @Body Library library);
 
-    @DELETE("libraries/{id}")
+    @DELETE("library/{id}")
     Call<Void> removeLibrary(@Path("id") String id);
 }

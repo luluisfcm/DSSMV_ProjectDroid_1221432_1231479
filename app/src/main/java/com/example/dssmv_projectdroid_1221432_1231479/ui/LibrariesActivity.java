@@ -66,6 +66,7 @@ public class LibrariesActivity extends AppCompatActivity {
             libraryView.setBackgroundResource(R.drawable.library_item_background);
             libraryView.setPadding(16, 16, 16, 16);
 
+            // Display in this view
             SpannableStringBuilder data = new SpannableStringBuilder();
             String nameText = "Library Name: " + library.getName() + "\n";
             data.append(nameText);
@@ -76,15 +77,10 @@ public class LibrariesActivity extends AppCompatActivity {
                     .append("Statement: ").append(library.getOpenStatement()).append("\n");
 
             libraryView.setText(data);
-
-            // Set click listener to navigate to the detail page
+            // Set click listener to navigate to LibraryDetailActivity with the library's ID
             libraryView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, LibraryDetailActivity.class);
-                intent.putExtra("library_name", library.getName());
-                intent.putExtra("library_address", library.getAddress());
-                intent.putExtra("is_open", library.isOpen());
-                intent.putExtra("open_days", library.getOpenDays());
-                intent.putExtra("open_statement", library.getOpenStatement());
+                intent.putExtra("library_id", library.getId().toString()); // Pass the ID as a String
                 startActivity(intent);
             });
 
