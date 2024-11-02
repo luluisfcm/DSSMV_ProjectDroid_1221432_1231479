@@ -1,7 +1,7 @@
 package com.example.dssmv_projectdroid_1221432_1231479.ui;
 
 import android.os.Bundle;
-import android.util.Log;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,12 +9,15 @@ import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import java.util.List;
+import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.StyleSpan;
 
 public class LibraryDetailActivity extends AppCompatActivity {
     private TextView booksTextView;
@@ -26,10 +29,11 @@ public class LibraryDetailActivity extends AppCompatActivity {
 
         String libraryId = getIntent().getStringExtra("library_id");
 
-        booksTextView = findViewById(R.id.tvBooks); // TextView para exibir os livros
+        // Atualize para buscar o LinearLayout onde os livros serão exibidos
+        LinearLayout containerBooksData = findViewById(R.id.containerBooksData);
 
         if (libraryId != null) {
-            fetchBooks(libraryId);
+            fetchBooks(libraryId); // Esse método irá chamar displayBooks para preencher o layout
         } else {
             Toast.makeText(this, "Library ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -56,35 +60,49 @@ public class LibraryDetailActivity extends AppCompatActivity {
         });
     }
 
-
     private void displayBooks(List<LibraryBook> books) {
-        TextView booksTextView = findViewById(R.id.tvBooks);
-        StringBuilder bookDetails = new StringBuilder();
+        LinearLayout container = findViewById(R.id.containerBooksData);
+        container.removeAllViews();
 
         for (LibraryBook libraryBook : books) {
             Book book = libraryBook.getBook();
 
-            // Extract title, first author name, and ISBN
-            String title = book.getTitle();
-            String isbn = libraryBook.getIsbn();
+            TextView bookView = new TextView(this);
+            bookView.setTextSize(16);
+            bookView.setTextColor(getResources().getColor(android.R.color.black));
+            bookView.setBackgroundResource(R.drawable.book_item_background);
+            bookView.setPadding(16, 16, 16, 16);
 
-            // Get the first author's name if available
+            // Use SpannableStringBuilder to style the text
+            SpannableStringBuilder data = new SpannableStringBuilder();
+
+            // Title with bold style
+            String titleText = "Title: " + book.getTitle() + "\n";
+            data.append(titleText);
+            data.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            // Author and ISBN details
             String authorName = (book.getAuthors() != null && !book.getAuthors().isEmpty())
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
+            data.append("Author: ").append(authorName).append("\n");
+            data.append("ISBN: ").append(libraryBook.getIsbn()).append("\n");
 
-            // Append details to the StringBuilder
-            bookDetails.append("Title: ").append(title).append("\n");
-            bookDetails.append("Author: ").append(authorName).append("\n");
-            bookDetails.append("ISBN: ").append(isbn).append("\n\n");
+            bookView.setText(data);
+
+            // Add the styled TextView to the container
+            container.addView(bookView);
+
+            // Set margins for the view
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bookView.getLayoutParams();
+            params.setMargins(0, 0, 0, 16);
+            bookView.setLayoutParams(params);
         }
-
-        // Set the text on the TextView
-        booksTextView.setText(bookDetails.toString());
     }
-private void showError(String message) {
-    Toast.makeText(LibraryDetailActivity.this, message, Toast.LENGTH_SHORT).show();
-}
 
 
+
+    private void showError(String message) {
+        Toast.makeText(LibraryDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
 }

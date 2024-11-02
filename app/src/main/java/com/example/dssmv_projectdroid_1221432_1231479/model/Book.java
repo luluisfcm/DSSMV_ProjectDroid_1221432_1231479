@@ -6,8 +6,16 @@ public class Book {
     private String title;
     private List<Author> authors;
     private String isbn;
+    private CoverUrls coverUrls;
 
-    // Getters e setters
+    public CoverUrls getCoverUrls() {
+        return coverUrls;
+    }
+
+    public void setCoverUrls(CoverUrls coverUrls) {
+        this.coverUrls = coverUrls;
+    }
+
     public String getTitle() {
         return title;
     }

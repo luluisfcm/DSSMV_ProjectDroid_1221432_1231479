@@ -18,7 +18,7 @@ public interface LibraryApi {
     @GET("library") // Definido para coincidir com a URL base completa
     Call<List<Library>> getLibraries();
 
-    @GET("library/{id}/book?limit=7")
+    @GET("library/{id}/book?limit=15")
     Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
     @POST("library")
