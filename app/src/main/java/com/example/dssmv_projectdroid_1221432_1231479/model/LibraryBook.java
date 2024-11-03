@@ -2,10 +2,10 @@ package com.example.dssmv_projectdroid_1221432_1231479.model;
 
 public class LibraryBook {
     private int available;
-    private Book book;          // Supondo que você tenha uma classe Book
+    private Book book;
     private int checkedOut;
     private String isbn;
-    private Library library;     // Supondo que você tenha uma classe Library
+    private Library library;
     private int stock;
 
     // Construtor

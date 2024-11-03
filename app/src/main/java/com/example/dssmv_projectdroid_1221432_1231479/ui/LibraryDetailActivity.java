@@ -1,10 +1,15 @@
 package com.example.dssmv_projectdroid_1221432_1231479.ui;
 
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.bumptech.glide.Glide;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
@@ -19,6 +24,8 @@ import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
+import android.text.method.LinkMovementMethod;
+import android.text.style.URLSpan;
 
 public class LibraryDetailActivity extends AppCompatActivity {
     private TextView booksTextView;
@@ -28,13 +35,15 @@ public class LibraryDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library_detail);
 
-        String libraryId = getIntent().getStringExtra("library_id");
-
-        // Atualize para buscar o LinearLayout onde os livros serão exibidos
+        // Verifique se o container foi encontrado corretamente
         LinearLayout containerBooksData = findViewById(R.id.containerBooksData);
+        if (containerBooksData == null) {
+            Toast.makeText(this, "Container não encontrado", Toast.LENGTH_SHORT).show();
+        }
 
+        String libraryId = getIntent().getStringExtra("library_id");
         if (libraryId != null) {
-            fetchBooks(libraryId); // Esse método irá chamar displayBooks para preencher o layout
+            fetchBooks(libraryId); // Chama o método para buscar e exibir os livros
         } else {
             Toast.makeText(this, "Library ID not found", Toast.LENGTH_SHORT).show();
         }
@@ -48,7 +57,12 @@ public class LibraryDetailActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<LibraryBook>> call, Response<List<LibraryBook>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    displayBooks(response.body());
+                    List<LibraryBook> books = response.body();
+                    displayBooks(books);
+                    // Para cada livro, busque a capa usando o ISBN
+//                    for (LibraryBook libraryBook : books) {
+//                        fetchBookCover(libraryBook.getIsbn(), libraryBook);
+//                    }
                 } else {
                     showError("Error: " + response.code());
                 }
@@ -61,27 +75,30 @@ public class LibraryDetailActivity extends AppCompatActivity {
         });
     }
 
-    private  void fetchCoverUrl(String isbn){
-        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
-        Call<List<LibraryBook>> call = api.getCoverByISBN(isbn);
+    // Novo método para buscar a imagem da capa pelo ISBN
+//    private void fetchBookCover(String isbn, LibraryBook libraryBook) {
+//        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+//        Call<LibraryBook> call = api.getCoverByISBN(isbn);
+//
+//
+//        call.enqueue(new Callback<LibraryBook>() {
+//            @Override
+//            public void onResponse(Call<LibraryBook> call, Response<LibraryBook> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    // Atualiza o LibraryBook com a URL da capa
+//                    LibraryBook updatedLibraryBook = response.body();
+//                    libraryBook.getBook().setCoverUrls(updatedLibraryBook.getBook().getCoverUrls());
+//                    displayBookCover(libraryBook);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<LibraryBook> call, Throwable throwable) {
+//                showError("Error fetching cover: " + throwable.getMessage());
+//            }
+//        });
+//    }
 
-        call.enqueue(new Callback<List<LibraryBook>>() {
-            @Override
-            public void onResponse(Call<List<LibraryBook>> call, Response<List<LibraryBook>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    displayBooks(response.body());
-                } else {
-                    showError("Error: " + response.code());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LibraryBook>> call, Throwable throwable) {
-                showError("Error: " + throwable.getMessage());
-            }
-        }
-        );
-    }
 
     private void displayBooks(List<LibraryBook> books) {
         LinearLayout container = findViewById(R.id.containerBooksData);
@@ -96,15 +113,11 @@ public class LibraryDetailActivity extends AppCompatActivity {
             bookView.setBackgroundResource(R.drawable.book_item_background);
             bookView.setPadding(16, 16, 16, 16);
 
-            // Use SpannableStringBuilder to style the text
             SpannableStringBuilder data = new SpannableStringBuilder();
-
-            // Title with bold style
             String titleText = "Title: " + book.getTitle() + "\n";
             data.append(titleText);
             data.setSpan(new StyleSpan(Typeface.BOLD), 0, titleText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-            // Author and ISBN details
             String authorName = (book.getAuthors() != null && !book.getAuthors().isEmpty())
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
@@ -113,17 +126,54 @@ public class LibraryDetailActivity extends AppCompatActivity {
 
             bookView.setText(data);
 
-            // Add the styled TextView to the container
+            // Adiciona o TextView ao container
             container.addView(bookView);
 
-            // Set margins for the view
+            // Cria uma ImageView para a capa
+            ImageView coverImageView = new ImageView(this);
+            coverImageView.setLayoutParams(new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            ));
+            coverImageView.setPadding(8, 8, 8, 8);
+
+//            // Carrega a imagem se a URL da capa estiver disponível
+//            if (book.getCoverUrls() != null && book.getCoverUrls().getMediumUrl() != null) {
+//                Glide.with(this)
+//                        .load(book.getCoverUrls().getMediumUrl())
+//                        .into(coverImageView);
+//            } else {
+//                coverImageView.setImageResource(R.drawable.placeholder_image); // Imagem de placeholder
+//            }
+//
+//            container.addView(coverImageView);
+
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bookView.getLayoutParams();
             params.setMargins(0, 0, 0, 16);
             bookView.setLayoutParams(params);
         }
     }
 
-
+//    private void displayBookCover(LibraryBook libraryBook) {
+//        LinearLayout container = findViewById(R.id.containerBooksData);
+//
+//        // Obter o URL da capa
+//        String coverUrl = libraryBook.getBook().getCoverUrls() != null
+//                ? libraryBook.getBook().getCoverUrls().getSmallUrl()
+//                : "URL da capa não disponível";
+//
+//        // Log para verificar se o método é chamado e o URL é obtido corretamente
+//        Log.d("LibraryDetailActivity", "URL da capa: " + coverUrl);
+//
+//        // Exibir o URL em um TextView
+//        TextView coverUrlTextView = new TextView(this);
+//        coverUrlTextView.setTextSize(14);
+//        coverUrlTextView.setTextColor(getResources().getColor(android.R.color.black));
+//        coverUrlTextView.setText("URL da capa: " + coverUrl);
+//
+//        // Adicionar o TextView ao container
+//        container.addView(coverUrlTextView);
+//    }
 
     private void showError(String message) {
         Toast.makeText(LibraryDetailActivity.this, message, Toast.LENGTH_SHORT).show();
