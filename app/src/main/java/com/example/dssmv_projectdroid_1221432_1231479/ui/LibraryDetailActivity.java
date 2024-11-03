@@ -9,6 +9,7 @@ import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -58,6 +59,28 @@ public class LibraryDetailActivity extends AppCompatActivity {
                 showError("Error: " + throwable.getMessage());
             }
         });
+    }
+
+    private  void fetchCoverUrl(String isbn){
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+        Call<List<LibraryBook>> call = api.getCoverByISBN(isbn);
+
+        call.enqueue(new Callback<List<LibraryBook>>() {
+            @Override
+            public void onResponse(Call<List<LibraryBook>> call, Response<List<LibraryBook>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    displayBooks(response.body());
+                } else {
+                    showError("Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LibraryBook>> call, Throwable throwable) {
+                showError("Error: " + throwable.getMessage());
+            }
+        }
+        );
     }
 
     private void displayBooks(List<LibraryBook> books) {

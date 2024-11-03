@@ -21,6 +21,10 @@ public interface LibraryApi {
     @GET("library/{id}/book?limit=15")
     Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
+    @GET("v1/book/{isbn}?persist=true")
+    Call<List<LibraryBook>> getCoverByISBN(@Path("isbn") String isbn);
+
+
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
 
