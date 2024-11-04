@@ -1,6 +1,7 @@
 package com.example.dssmv_projectdroid_1221432_1231479.model;
 
 import java.time.LocalTime;
+import java.util.List;
 
 public class Library {
 
@@ -12,13 +13,7 @@ public class Library {
     private String openStatement;
     private String openTime;
     private String closeTime;
-
-    public class Time {
-        private int hour;
-        private int minute;
-        private int nano;
-        private int second;
-    }
+    private List<Book> books;
 
     public Library(String address, String name, boolean open, String openDays, String openStatement) {
         this.address = address;
@@ -85,6 +80,10 @@ public class Library {
 
     public String getOpenTime() {
         return openTime;
+    }
+
+    public List<Book> getBooks() {
+        return books;
     }
 
     @Override
