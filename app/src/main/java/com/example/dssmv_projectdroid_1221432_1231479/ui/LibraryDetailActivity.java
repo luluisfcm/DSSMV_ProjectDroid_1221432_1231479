@@ -60,9 +60,9 @@ public class LibraryDetailActivity extends AppCompatActivity {
                     List<LibraryBook> books = response.body();
                     displayBooks(books);
                     // Para cada livro, busque a capa usando o ISBN
-//                    for (LibraryBook libraryBook : books) {
-//                        fetchBookCover(libraryBook.getIsbn(), libraryBook);
-//                    }
+                    for (LibraryBook libraryBook : books) {
+                        fetchBookCover(libraryBook.getIsbn(), libraryBook);
+                   }
                 } else {
                     showError("Error: " + response.code());
                 }
@@ -76,28 +76,28 @@ public class LibraryDetailActivity extends AppCompatActivity {
     }
 
     // Novo método para buscar a imagem da capa pelo ISBN
-//    private void fetchBookCover(String isbn, LibraryBook libraryBook) {
-//        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
-//        Call<LibraryBook> call = api.getCoverByISBN(isbn);
-//
-//
-//        call.enqueue(new Callback<LibraryBook>() {
-//            @Override
-//            public void onResponse(Call<LibraryBook> call, Response<LibraryBook> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    // Atualiza o LibraryBook com a URL da capa
-//                    LibraryBook updatedLibraryBook = response.body();
-//                    libraryBook.getBook().setCoverUrls(updatedLibraryBook.getBook().getCoverUrls());
-//                    displayBookCover(libraryBook);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<LibraryBook> call, Throwable throwable) {
-//                showError("Error fetching cover: " + throwable.getMessage());
-//            }
-//        });
-//    }
+    private void fetchBookCover(String isbn, LibraryBook libraryBook) {
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+        Call<LibraryBook> call = api.getCoverByISBN(isbn);
+
+
+        call.enqueue(new Callback<LibraryBook>() {
+            @Override
+            public void onResponse(Call<LibraryBook> call, Response<LibraryBook> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Atualiza o LibraryBook com a URL da capa
+                    LibraryBook updatedLibraryBook = response.body();
+                    libraryBook.getBook().setCoverUrls(updatedLibraryBook.getBook().getCoverUrls());
+                    displayBookCover(libraryBook);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LibraryBook> call, Throwable throwable) {
+                showError("Error fetching cover: " + throwable.getMessage());
+            }
+        });
+    }
 
 
     private void displayBooks(List<LibraryBook> books) {
@@ -138,15 +138,15 @@ public class LibraryDetailActivity extends AppCompatActivity {
             coverImageView.setPadding(8, 8, 8, 8);
 
 //            // Carrega a imagem se a URL da capa estiver disponível
-//            if (book.getCoverUrls() != null && book.getCoverUrls().getMediumUrl() != null) {
-//                Glide.with(this)
-//                        .load(book.getCoverUrls().getMediumUrl())
-//                        .into(coverImageView);
-//            } else {
-//                coverImageView.setImageResource(R.drawable.placeholder_image); // Imagem de placeholder
-//            }
-//
-//            container.addView(coverImageView);
+            if (book.getCoverUrls() != null && book.getCoverUrls().getMediumUrl() != null) {
+                Glide.with(this)
+                        .load(book.getCoverUrls().getMediumUrl())
+                        .into(coverImageView);
+            } else {
+                coverImageView.setImageResource(R.drawable.placeholder_image); // Imagem de placeholder
+            }
+
+            container.addView(coverImageView);
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bookView.getLayoutParams();
             params.setMargins(0, 0, 0, 16);
@@ -154,26 +154,26 @@ public class LibraryDetailActivity extends AppCompatActivity {
         }
     }
 
-//    private void displayBookCover(LibraryBook libraryBook) {
-//        LinearLayout container = findViewById(R.id.containerBooksData);
-//
-//        // Obter o URL da capa
-//        String coverUrl = libraryBook.getBook().getCoverUrls() != null
-//                ? libraryBook.getBook().getCoverUrls().getSmallUrl()
-//                : "URL da capa não disponível";
-//
-//        // Log para verificar se o método é chamado e o URL é obtido corretamente
-//        Log.d("LibraryDetailActivity", "URL da capa: " + coverUrl);
-//
-//        // Exibir o URL em um TextView
-//        TextView coverUrlTextView = new TextView(this);
-//        coverUrlTextView.setTextSize(14);
-//        coverUrlTextView.setTextColor(getResources().getColor(android.R.color.black));
-//        coverUrlTextView.setText("URL da capa: " + coverUrl);
-//
-//        // Adicionar o TextView ao container
-//        container.addView(coverUrlTextView);
-//    }
+    private void displayBookCover(LibraryBook libraryBook) {
+        LinearLayout container = findViewById(R.id.containerBooksData);
+
+        // Obter o URL da capa
+        String coverUrl = libraryBook.getBook().getCoverUrls() != null
+                ? libraryBook.getBook().getCoverUrls().getSmallUrl()
+                : "URL da capa não disponível";
+
+        // Log para verificar se o método é chamado e o URL é obtido corretamente
+        Log.d("LibraryDetailActivity", "URL da capa: " + coverUrl);
+
+        // Exibir o URL em um TextView
+        TextView coverUrlTextView = new TextView(this);
+        coverUrlTextView.setTextSize(14);
+        coverUrlTextView.setTextColor(getResources().getColor(android.R.color.black));
+        coverUrlTextView.setText("URL da capa: " + coverUrl);
+
+        // Adicionar o TextView ao container
+        container.addView(coverUrlTextView);
+    }
 
     private void showError(String message) {
         Toast.makeText(LibraryDetailActivity.this, message, Toast.LENGTH_SHORT).show();
