@@ -66,21 +66,25 @@ public class LibrariesActivity extends AppCompatActivity {
             libraryView.setBackgroundResource(R.drawable.library_item_background);
             libraryView.setPadding(16, 16, 16, 16);
 
-            // Display in this view
+            // Create SpannableStringBuilder to format the display text
             SpannableStringBuilder data = new SpannableStringBuilder();
-            String nameText = "Library Name: " + library.getName() + "\n";
+
+            // Check each field for null before appending
+            String nameText = "Library Name: " + (library.getName() != null ? library.getName() : "Unknown") + "\n";
             data.append(nameText);
             data.setSpan(new StyleSpan(Typeface.BOLD), 0, nameText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            data.append("Address: ").append(library.getAddress()).append("\n")
+
+            data.append("Address: ").append(library.getAddress() != null ? library.getAddress() : "Unknown").append("\n")
                     .append("Open Status: ").append(library.isOpen() ? "Open" : "Closed").append("\n")
-                    .append("Open Days: ").append(library.getOpenDays()).append("\n")
-                    .append("Statement: ").append(library.getOpenStatement()).append("\n");
+                    .append("Open Days: ").append(library.getOpenDays() != null ? library.getOpenDays() : "N/A").append("\n")
+                    .append("Statement: ").append(library.getOpenStatement() != null ? library.getOpenStatement() : "N/A").append("\n");
 
             libraryView.setText(data);
+
             // Set click listener to navigate to LibraryDetailActivity with the library's ID
             libraryView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, LibraryDetailActivity.class);
-                intent.putExtra("library_id", library.getId().toString()); // Pass the ID as a String
+                intent.putExtra("library_id", library.getId() != null ? library.getId().toString() : ""); // Pass the ID as a String
                 startActivity(intent);
             });
 
