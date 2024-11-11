@@ -1,5 +1,7 @@
 package com.example.dssmv_projectdroid_1221432_1231479.model;
 
+import android.widget.ImageView;
+
 public class LibraryBook {
     private int available;
     private Book book;
@@ -7,15 +9,17 @@ public class LibraryBook {
     private String isbn;
     private Library library;
     private int stock;
+    private ImageView coverImageView;
 
     // Construtor
-    public LibraryBook(int available, Book book, int checkedOut, String isbn, Library library, int stock) {
+    public LibraryBook(int available, Book book, int checkedOut, String isbn, Library library, int stock, ImageView coverImageView) {
         this.available = available;
         this.book = book;
         this.checkedOut = checkedOut;
         this.isbn = isbn;
         this.library = library;
         this.stock = stock;
+        this.coverImageView = coverImageView;
     }
 
     // Getters e Setters
@@ -65,6 +69,14 @@ public class LibraryBook {
 
     public void setStock(int stock) {
         this.stock = stock;
+    }
+
+    public ImageView getCoverImageView() {
+        return coverImageView;
+    }
+
+    public void setCoverImageView(ImageView coverImageView) {
+        this.coverImageView = coverImageView;
     }
 
     // Método toString para exibir informações
