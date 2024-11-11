@@ -9,10 +9,10 @@
             android:layout_height="wrap_content"
             android:text="View Libraries"
             android:layout_centerInParent="true" />
-
-
-    <TextView
-            android:id="@+id/tvLibraryData"
+    <Button
+            android:id="@+id/button_view_users"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="View qiuhyedudsbak"
+            android:layout_centerInParent="true" />
 </RelativeLayout>
