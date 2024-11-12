@@ -17,5 +17,5 @@
             android:text="View Users"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/button_view_libraries"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="50dp" />
 </RelativeLayout>
