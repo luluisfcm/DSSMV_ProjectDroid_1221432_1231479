@@ -25,8 +25,6 @@ import android.text.style.StyleSpan;
 
 public class LibraryDetailActivity extends AppCompatActivity {
 
-    private static final String BASE_URL = "http://193.136.62.24/v1/";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,7 +127,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
             // Construct the cover URL with the ISBN
-            String coverUrl = BASE_URL + "assets/cover/" + isbn + "-S.jpg";
+            String coverUrl = "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-S.jpg";
             Log.d("LibraryDetailActivity", "Cover URL for book: " + book.getTitle() + " - " + coverUrl);
 
             // Load the image using Glide, with a placeholder image if it fails
@@ -142,7 +140,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
             // Set an OnClickListener to open details on image click
             coverImageView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BookDetailsActivity.class);
-                intent.putExtra("coverUrl", BASE_URL + "assets/cover/" + isbn + "-m.jpg");
+                intent.putExtra("coverUrl", "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-m.jpg");
                 intent.putExtra("title", book.getTitle());
                 intent.putExtra("author", (book.getAuthors() != null && !book.getAuthors().isEmpty())
                         ? book.getAuthors().get(0).getName() : "Unknown Author");
