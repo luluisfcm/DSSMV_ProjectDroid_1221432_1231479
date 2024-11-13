@@ -66,7 +66,6 @@ public class LibraryDetailActivity extends AppCompatActivity {
         });
     }
 
-    // Method to display each book's details and cover image
     private void displayBooks(List<LibraryBook> books) {
         LinearLayout container = findViewById(R.id.containerBooksData);
         container.removeAllViews(); // Clear any existing views
