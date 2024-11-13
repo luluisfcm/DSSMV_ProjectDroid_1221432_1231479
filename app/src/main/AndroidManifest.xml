@@ -36,8 +36,6 @@
         <activity android:name=".ui.UsernameActivity"
                   android:label="Usernames"/>
 
-        <activity android:name=".ui.BooksActivity"
-                  android:label="Livros"/>
 
 
 
