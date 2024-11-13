@@ -1,48 +1,57 @@
-<!-- res/layout/activity_book_details.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:padding="16dp">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-    <!-- Book Cover Image -->
-    <ImageView
-            android:id="@+id/bookCoverImageView"
-            android:layout_width="200dp"
-            android:layout_height="300dp"
-            android:layout_gravity="center" />
-
-    <!-- Book Title -->
-    <TextView
-            android:id="@+id/bookTitleTextView"
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp" />
+            android:orientation="vertical">
 
-    <!-- Book Author -->
-    <TextView
-            android:id="@+id/bookAuthorTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:paddingTop="8dp" />
+        <!-- Image for the book cover -->
+        <ImageView
+                android:id="@+id/bookCoverImageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/placeholder_image" />
 
-    <!-- Book Description -->
-    <TextView
-            android:id="@+id/bookDescriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:paddingTop="8dp" />
+        <!-- Text view for the book title -->
+        <TextView
+                android:id="@+id/bookTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title: "
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
 
-    <!-- Book Stock -->
-    <TextView
-            android:id="@+id/bookStockTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:paddingTop="8dp" />
+        <!-- Text view for the author -->
+        <TextView
+                android:id="@+id/bookAuthorTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Author: "
+                android:textSize="16sp"
+                android:layout_marginBottom="8dp"/>
 
-</LinearLayout>
+        <!-- Text view for the description -->
+        <TextView
+                android:id="@+id/bookDescriptionTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Description: "
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+
+        <!-- Text view for the stock -->
+        <TextView
+                android:id="@+id/bookStockTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stock: "
+                android:textSize="14sp"
+                android:layout_marginBottom="8dp"/>
+
+    </LinearLayout>
+</ScrollView>
