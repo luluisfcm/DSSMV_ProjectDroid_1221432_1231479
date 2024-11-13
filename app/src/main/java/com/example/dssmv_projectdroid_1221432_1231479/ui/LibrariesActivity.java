@@ -1,5 +1,8 @@
 package com.example.dssmv_projectdroid_1221432_1231479.ui;
 import android.content.Intent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.*;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
@@ -9,16 +12,13 @@ import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
-
+import android.app.AlertDialog;
 import java.util.List;
 
 public class LibrariesActivity extends AppCompatActivity {
@@ -102,29 +102,54 @@ public class LibrariesActivity extends AppCompatActivity {
     }
 
     private void addLibrary() {
-        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+        // Inflate the dialog layout
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_add_library, null);
 
-        Library newLibrary = new Library("New Library", "123 Library St", true, "Monday to Friday", "Open to the public");
-        Call<Library> call = api.addLibrary(newLibrary);
+        // Initialize EditTexts and CheckBox in the dialog
+        EditText editTextLibraryName = dialogView.findViewById(R.id.editTextLibraryName);
+        EditText editTextLibraryAddress = dialogView.findViewById(R.id.editTextLibraryAddress);
+        CheckBox checkBoxLibraryOpen = dialogView.findViewById(R.id.checkBoxLibraryOpen);
 
-        call.enqueue(new Callback<Library>() {
-            @Override
-            public void onResponse(Call<Library> call, Response<Library> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(LibrariesActivity.this, "Library added successfully", Toast.LENGTH_SHORT).show();
-                    fetchLibraries(); // Refresh the list
-                } else {
-                    showError("Error: " + response.code());
-                }
-            }
+        // Create and show the AlertDialog
+        new AlertDialog.Builder(this)
+                .setTitle("Add New Library")
+                .setView(dialogView)
+                .setPositiveButton("Add", (dialog, which) -> {
+                    // Get user input
+                    String libraryName = editTextLibraryName.getText().toString().trim();
+                    String libraryAddress = editTextLibraryAddress.getText().toString().trim();
+                    boolean isOpen = checkBoxLibraryOpen.isChecked();
 
-            @Override
-            public void onFailure(Call<Library> call, Throwable t) {
-                showError("Failure: " + t.getMessage());
-            }
-        });
+                    // Create Library object with user input
+                    Library newLibrary = new Library();
+                    newLibrary.setName(libraryName);
+                    newLibrary.setAddress(libraryAddress);
+                    newLibrary.setOpen(isOpen);
+
+                    // Call API to add library
+                    LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+                    Call<Library> call = api.addLibrary(newLibrary);
+                    call.enqueue(new Callback<Library>() {
+                        @Override
+                        public void onResponse(Call<Library> call, Response<Library> response) {
+                            if (response.isSuccessful()) {
+                                Toast.makeText(LibrariesActivity.this, "Library added!", Toast.LENGTH_SHORT).show();
+                                fetchLibraries(); // Refresh library list
+                            } else {
+                                showError("Failed to add library: " + response.message());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Library> call, Throwable t) {
+                            showError("Error: " + t.getMessage());
+                        }
+                    });
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
     }
-
 
     private void showError(String message) {
         Log.e(TAG, message);

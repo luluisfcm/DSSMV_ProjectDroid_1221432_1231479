@@ -1,6 +1,4 @@
 package com.example.dssmv_projectdroid_1221432_1231479.model;
-
-import java.time.LocalTime;
 import java.util.List;
 
 public class Library {
@@ -22,6 +20,10 @@ public class Library {
         this.openDays = openDays;
         this.openStatement = openStatement;
         this.openTime = openTime;
+    }
+
+    public Library() {
+
     }
 
     //Getters e Setters
