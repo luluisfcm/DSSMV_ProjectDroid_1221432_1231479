@@ -33,7 +33,5 @@
         <activity android:name=".ui.BookDetailsActivity"
                   android:label="Detalhes"/>
 
-        <activity android:name=".ui.UserNameActivity"
-                  android:label="Usernames" tools:ignore="Instantiatable"/>
     </application>
 </manifest>
