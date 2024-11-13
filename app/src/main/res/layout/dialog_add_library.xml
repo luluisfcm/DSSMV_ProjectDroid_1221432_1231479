@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/dialog_add_library.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="16dp">
+
+    <EditText
+            android:id="@+id/editTextLibraryName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Library Name" />
+
+    <EditText
+            android:id="@+id/editTextLibraryAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Library Address" />
+
+    <CheckBox
+            android:id="@+id/checkBoxLibraryOpen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Open Status" />
+
+</LinearLayout>

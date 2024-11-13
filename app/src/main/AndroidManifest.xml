@@ -29,5 +29,9 @@
 
         <activity android:name=".ui.LibraryDetailActivity"
                   android:label="Livros"/>
+
+        <activity android:name=".ui.BookDetailsActivity"
+                  android:label="Detalhes"/>
+
     </application>
 </manifest>
