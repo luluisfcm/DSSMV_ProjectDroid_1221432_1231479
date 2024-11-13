@@ -24,6 +24,9 @@ public interface LibraryApi {
     @GET("assets/cover/{isbn}-s.jpg")
     Call<LibraryBook> getCoverByISBN(@Path("isbn") String isbn);
 
+    @GET("user/checked-out?userId={username}")
+    Call<LibraryBook> getBooksByUser(@Path("username") String username);
+
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
 
