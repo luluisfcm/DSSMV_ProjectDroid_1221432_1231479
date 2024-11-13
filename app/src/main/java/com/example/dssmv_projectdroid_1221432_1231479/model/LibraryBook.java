@@ -35,4 +35,5 @@ public class LibraryBook {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
 }

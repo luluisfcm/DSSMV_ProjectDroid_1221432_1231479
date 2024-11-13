@@ -24,7 +24,7 @@ public class Library {
         this.openTime = openTime;
     }
 
-     //Getters e Setters
+    //Getters e Setters
     public String getAddress() {
         return address;
     }

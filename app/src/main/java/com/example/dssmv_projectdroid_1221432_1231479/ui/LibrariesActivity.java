@@ -4,7 +4,6 @@ import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
-
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -14,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,6 +31,11 @@ public class LibrariesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_libraries);
 
         fetchLibraries();
+        FloatingActionButton fabAddLibrary = findViewById(R.id.fab_add_library);
+        fabAddLibrary.setOnClickListener(v -> {
+            // Call addLibrary() when the button is clicked
+            addLibrary();
+        });
     }
 
     private void fetchLibraries() {
@@ -95,6 +100,31 @@ public class LibrariesActivity extends AppCompatActivity {
             libraryView.setLayoutParams(params);
         }
     }
+
+    private void addLibrary() {
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+
+        Library newLibrary = new Library("New Library", "123 Library St", true, "Monday to Friday", "Open to the public");
+        Call<Library> call = api.addLibrary(newLibrary);
+
+        call.enqueue(new Callback<Library>() {
+            @Override
+            public void onResponse(Call<Library> call, Response<Library> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(LibrariesActivity.this, "Library added successfully", Toast.LENGTH_SHORT).show();
+                    fetchLibraries(); // Refresh the list
+                } else {
+                    showError("Error: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Library> call, Throwable t) {
+                showError("Failure: " + t.getMessage());
+            }
+        });
+    }
+
 
     private void showError(String message) {
         Log.e(TAG, message);
