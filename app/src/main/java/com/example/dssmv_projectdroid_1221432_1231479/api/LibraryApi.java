@@ -24,7 +24,7 @@ public interface LibraryApi {
     Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
     @POST("library/{libraryId}/book/{isbn}")
-    Call<List<LibraryBook>> addBook(@Path("libraryId") String librabryId, ("isbn") String isbn);
+    Call<Void> addBook(@Path("libraryId") String libraryId, @Body String isbn);
 
     @POST("library")
     Call<Library> addLibrary(@Body Library library);

@@ -12,11 +12,15 @@ import com.bumptech.glide.Glide;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.Collections;
 import java.util.List;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
@@ -25,6 +29,7 @@ import android.text.style.StyleSpan;
 
 public class LibraryDetailActivity extends AppCompatActivity {
 
+    private String libraryId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +41,16 @@ public class LibraryDetailActivity extends AppCompatActivity {
             return;
         }
 
-        String libraryId = getIntent().getStringExtra("library_id");
+        libraryId = getIntent().getStringExtra("library_id");
         if (libraryId != null) {
             fetchBooks(libraryId);
         } else {
             showError("Library ID not found");
         }
+
+        FloatingActionButton fabAddBook = findViewById(R.id.fab_add_book);
+        fabAddBook.setOnClickListener(v -> addBookToLibrary());
+
     }
 
     private void fetchBooks(String libraryId) {
@@ -66,6 +75,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
         });
     }
 
+    // Method to display each book's details and cover image
     private void displayBooks(List<LibraryBook> books) {
         LinearLayout container = findViewById(R.id.containerBooksData);
         container.removeAllViews(); // Clear any existing views
@@ -117,11 +127,54 @@ public class LibraryDetailActivity extends AppCompatActivity {
             horizontalContainer.addView(coverImageView);
             horizontalContainer.addView(bookDetails);
 
+            horizontalContainer.setOnLongClickListener(v -> {
+                addBookToLibrary(); // Pass the book ID for deletion
+                return true;
+            });
+
             // Add the horizontal container to the main vertical container
             container.addView(horizontalContainer);
 
         }
     }
+
+    private void addBookToLibrary() {
+        // Hardcoded values
+        String hardcodedTitle = "Twilight";
+        String hardcodedAuthor = "Stephenie Meyer";
+
+        // Generate ISBN (simulating here, adapt as needed)
+        String generatedIsbn = "978-1904233640";//"ISBN" + System.currentTimeMillis();
+
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+
+        // Use the library ID from intent, assuming it is already available in this activity
+        String libraryId = getIntent().getStringExtra("library_id");
+        if (libraryId == null) {
+            showError("Library ID not found");
+            return;
+        }
+
+        // Call the API to add the book
+        Call<Void> call = api.addBook(libraryId, generatedIsbn);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(LibraryDetailActivity.this, "Book added successfully", Toast.LENGTH_SHORT).show();
+                    fetchBooks(libraryId);  // Refresh the list of books
+                } else {
+                    showError("Failed to add book: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                showError("Error: " + t.getMessage());
+            }
+        });
+    }
+
 
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
