@@ -1,15 +1,34 @@
-<!-- activity_user_link.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:padding="16dp">
+              android:padding="16dp"
+              android:background="#FFFFFF">
+
+    <!-- Título da Activity -->
+    <TextView
+            android:id="@+id/textView_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Books Checked Out"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="16dp"
+            android:textColor="#000000" />
 
     <!-- Container para exibir a lista de livros -->
-    <LinearLayout
-            android:id="@+id/containerBooks"
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:fillViewport="true">
+
+        <LinearLayout
+                android:id="@+id/containerBooks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+    </ScrollView>
 
 </LinearLayout>
