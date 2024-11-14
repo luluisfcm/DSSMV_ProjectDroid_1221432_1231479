@@ -22,7 +22,7 @@ public interface LibraryApi {
     Call<Void> addBook(@Path("libraryId") String libraryId, @Body String isbn);
 
     @GET("user/checked-out")
-    Call<List<Book>> getBooksByUser(@Query("userId") String username);
+    Call<List<LibraryBook>> getBooksByUser(@Query("userId") String username);
 
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
