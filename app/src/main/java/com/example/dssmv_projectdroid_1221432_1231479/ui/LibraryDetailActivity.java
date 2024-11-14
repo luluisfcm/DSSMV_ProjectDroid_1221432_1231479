@@ -123,7 +123,6 @@ public class LibraryDetailActivity extends AppCompatActivity {
             data.append("Author: ").append(authorName).append("\n");
             data.append("Stock: ").append(String.valueOf(libraryBook.getStock())).append("\n");
 
-
             bookDetails.setText(data);
 
             // Add ImageView and TextView to the horizontal container
@@ -234,11 +233,12 @@ public class LibraryDetailActivity extends AppCompatActivity {
             // Set an OnClickListener to open details on image click
             coverImageView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BookDetailsActivity.class);
-                intent.putExtra("coverUrl", "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-m.jpg");
+                intent.putExtra("coverUrl", "http://193.136.62.24/v1/assets/cover/" + isbn + "-m.jpg");
                 intent.putExtra("title", book.getTitle());
                 intent.putExtra("author", (book.getAuthors() != null && !book.getAuthors().isEmpty())
                         ? book.getAuthors().get(0).getName() : "Unknown Author");
-                intent.putExtra("stock", 0);  // Set the stock value dynamically if available
+                intent.putExtra("stock", 0);  // Passar o valor do estoque dinamicamente, se disponível
+                intent.putExtra("description", book.getDescription() != null ? book.getDescription() : "No description available");
                 startActivity(intent);
             });
         } else {
@@ -254,5 +254,4 @@ public class LibraryDetailActivity extends AppCompatActivity {
                 .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                 .show();
     }
-
 }

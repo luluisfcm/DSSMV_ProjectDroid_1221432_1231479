@@ -29,14 +29,15 @@ public class BookDetailsActivity extends AppCompatActivity {
         String description = getIntent().getStringExtra("description");
         int stock = getIntent().getIntExtra("stock", 0);
 
-        // Verifique se a URL da capa é válida
+        // Verifique o URL da capa no log
         Log.d("BookDetailsActivity", "Cover URL: " + coverUrl);
 
-        // Defina os dados nas views
+        // Defina os dados nas views, incluindo o carregamento da imagem com Glide
         Glide.with(this)
                 .load(coverUrl)
                 .placeholder(R.drawable.placeholder_image)  // Imagem placeholder enquanto carrega
-                .error(R.drawable.placeholder_image)  // Imagem de erro caso o carregamento falhe
+                .error(R.drawable.placeholder_image)        // Imagem de erro caso o carregamento falhe
+                .centerCrop()                               // Ajuste de exibição da imagem
                 .into(bookCoverImageView);
 
         bookTitleTextView.setText("Title: " + title);
@@ -45,3 +46,4 @@ public class BookDetailsActivity extends AppCompatActivity {
         bookStockTextView.setText("Stock: " + stock);
     }
 }
+
