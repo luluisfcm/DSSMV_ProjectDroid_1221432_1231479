@@ -12,20 +12,23 @@ import com.bumptech.glide.Glide;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
+import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import java.util.Collections;
 import java.util.List;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
+import android.app.AlertDialog;
+import android.widget.EditText;
+import android.text.InputType;
+import android.widget.LinearLayout;
+
 
 public class LibraryDetailActivity extends AppCompatActivity {
 
@@ -49,7 +52,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
         }
 
         FloatingActionButton fabAddBook = findViewById(R.id.fab_add_book);
-        fabAddBook.setOnClickListener(v -> addBookToLibrary());
+        fabAddBook.setOnClickListener(v -> showAddBookDialog());
 
     }
 
@@ -118,7 +121,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
             data.append("Author: ").append(authorName).append("\n");
-            data.append("ISBN: ").append(libraryBook.getIsbn()).append("\n");
+            data.append("Stock: ").append(String.valueOf(libraryBook.getStock())).append("\n");
 
             bookDetails.setText(data);
 
@@ -126,36 +129,65 @@ public class LibraryDetailActivity extends AppCompatActivity {
             horizontalContainer.addView(coverImageView);
             horizontalContainer.addView(bookDetails);
 
-            horizontalContainer.setOnLongClickListener(v -> {
-                addBookToLibrary(); // Pass the book ID for deletion
-                return true;
-            });
-
             // Add the horizontal container to the main vertical container
             container.addView(horizontalContainer);
 
         }
     }
 
-    private void addBookToLibrary() {
-        // Hardcoded values
-        String hardcodedTitle = "Twilight";
-        String hardcodedAuthor = "Stephenie Meyer";
+    private void showAddBookDialog() {
+        // Create an AlertDialog builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add New Book");
 
-        // Generate ISBN (simulating here, adapt as needed)
-        String generatedIsbn = "978-1904233640";//"ISBN" + System.currentTimeMillis();
+        // Create a LinearLayout to hold the input fields
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 20, 50, 20);
 
+        // ISBN input field
+        final EditText isbnInput = new EditText(this);
+        isbnInput.setHint("Enter ISBN");
+        layout.addView(isbnInput);
+
+        // Stock input field
+        final EditText stockInput = new EditText(this);
+        stockInput.setHint("Enter Stock");
+        stockInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+        layout.addView(stockInput);
+
+        builder.setView(layout);
+
+        // Set up dialog buttons
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String isbn = isbnInput.getText().toString();
+            String stockText = stockInput.getText().toString();
+            int stock = stockText.isEmpty() ? 0 : Integer.parseInt(stockText);
+
+            // Call method to add book with provided ISBN and stock
+            addBookToLibrary(isbn, stock);
+        });
+
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        // Show the dialog
+        builder.show();
+    }
+
+    private void addBookToLibrary(String isbn, int stock) {
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
 
-        // Use the library ID from intent, assuming it is already available in this activity
         String libraryId = getIntent().getStringExtra("library_id");
         if (libraryId == null) {
             showError("Library ID not found");
             return;
         }
 
-        // Call the API to add the book
-        Call<Void> call = api.addBook(libraryId, generatedIsbn);
+        // Create the request body with the stock
+        CreateLibraryBookRequest requestBody = new CreateLibraryBookRequest(stock);
+
+        Call<Void> call = api.addBook(libraryId, isbn, requestBody);
+
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -163,13 +195,24 @@ public class LibraryDetailActivity extends AppCompatActivity {
                     Toast.makeText(LibraryDetailActivity.this, "Book added successfully", Toast.LENGTH_SHORT).show();
                     fetchBooks(libraryId);  // Refresh the list of books
                 } else {
-                    showError("Failed to add book: " + response.code());
+                    String errorBody = "";
+                    try {
+                        if (response.errorBody() != null) {
+                            errorBody = response.errorBody().string();
+                        }
+                    } catch (Exception e) {
+                        Log.e("LibraryDetailActivity", "Error reading errorBody", e);
+                    }
+                    String errorMessage = "Failed to add book: " + response.code() + " - " + errorBody;
+                    showError(errorMessage);
+                    Log.e("LibraryDetailActivity", errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 showError("Error: " + t.getMessage());
+                Log.e("LibraryDetailActivity", "API call failed", t);
             }
         });
     }
@@ -190,11 +233,12 @@ public class LibraryDetailActivity extends AppCompatActivity {
             // Set an OnClickListener to open details on image click
             coverImageView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BookDetailsActivity.class);
-                intent.putExtra("coverUrl", "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-m.jpg");
+                intent.putExtra("coverUrl", "http://193.136.62.24/v1/assets/cover/" + isbn + "-m.jpg");
                 intent.putExtra("title", book.getTitle());
                 intent.putExtra("author", (book.getAuthors() != null && !book.getAuthors().isEmpty())
                         ? book.getAuthors().get(0).getName() : "Unknown Author");
-                intent.putExtra("stock", 0);  // Set the stock value dynamically if available
+                intent.putExtra("stock", 0);  // Passar o valor do estoque dinamicamente, se disponível
+                intent.putExtra("description", book.getDescription() != null ? book.getDescription() : "No description available");
                 startActivity(intent);
             });
         } else {
@@ -204,6 +248,10 @@ public class LibraryDetailActivity extends AppCompatActivity {
     }
 
     private void showError(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Error")
+                .setMessage(message)
+                .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
+                .show();
     }
 }
