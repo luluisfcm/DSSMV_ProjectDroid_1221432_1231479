@@ -18,8 +18,8 @@ public interface LibraryApi {
     @GET("library/{id}/book")
     Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
-    @GET("assets/cover/{isbn}-s.jpg")
-    Call<LibraryBook> getCoverByISBN(@Path("isbn") String isbn);
+    @POST("library/{libraryId}/book/{isbn}")
+    Call<Void> addBook(@Path("libraryId") String libraryId, @Body String isbn);
 
     @GET("user/checked-out")
     Call<List<Book>> getBooksByUser(@Query("userId") String username);

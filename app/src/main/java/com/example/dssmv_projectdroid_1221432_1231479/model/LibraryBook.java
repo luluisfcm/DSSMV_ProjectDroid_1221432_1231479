@@ -3,6 +3,9 @@ package com.example.dssmv_projectdroid_1221432_1231479.model;
 import com.google.gson.annotations.SerializedName;
 
 public class LibraryBook {
+    @SerializedName("id")
+    private String id;
+
     @SerializedName("isbn")
     private String isbn;
 
@@ -11,6 +14,10 @@ public class LibraryBook {
 
     @SerializedName("stock")
     private int stock;
+
+    public String getId() {
+        return id;
+    }
 
     public String getIsbn() {
         return isbn;
