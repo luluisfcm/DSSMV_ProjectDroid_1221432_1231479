@@ -50,7 +50,7 @@ public class UserLinkActivity extends AppCompatActivity {
         }
     }
 
-    // Método para buscar os livros do usuário através da API
+    // Método para procurar os livros do usuário através da API
     private void fetchBooksByUser(String username) {
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
 
@@ -76,7 +76,7 @@ public class UserLinkActivity extends AppCompatActivity {
 
     // Método para exibir os livros na interface
     private void displayBooks(List<LibraryBook> books) {
-        LinearLayout container = findViewById(R.id.containerBooksData);
+        LinearLayout container = findViewById(R.id.containerBooks);
         container.removeAllViews(); // Clear any existing views
         Log.d("LibraryDetailActivity", "Displaying books: " + books.size());  // Verifique o número de livros
 
@@ -119,7 +119,6 @@ public class UserLinkActivity extends AppCompatActivity {
                     : "Unknown Author";
             data.append("Author: ").append(authorName).append("\n");
             data.append("Stock: ").append(String.valueOf(libraryBook.getStock())).append("\n");
-
             bookDetails.setText(data);
 
             // Add ImageView and TextView to the horizontal container
@@ -135,7 +134,7 @@ public class UserLinkActivity extends AppCompatActivity {
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
             // Construct the cover URL with the ISBN
-            String coverUrl = "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-S.jpg";
+            String coverUrl = "http://193.136.62.24/v1/assets/cover/" + isbn + "-S.jpg";
             Log.d("LibraryDetailActivity", "Cover URL for book: " + book.getTitle() + " - " + coverUrl);
 
             // Load the image using Glide, with a placeholder image if it fails
@@ -144,23 +143,13 @@ public class UserLinkActivity extends AppCompatActivity {
                     .placeholder(R.drawable.placeholder_image) // Image shown while loading
                     .error(R.drawable.placeholder_image)        // Image shown on load failure
                     .into(coverImageView);
-
-            // Set an OnClickListener to open details on image click
-            coverImageView.setOnClickListener(v -> {
-                Intent intent = new Intent(this, BookDetailsActivity.class);
-                intent.putExtra("coverUrl", "http://193.136.62.24/v1/assets/cover/" + isbn + "-m.jpg");
-                intent.putExtra("title", book.getTitle());
-                intent.putExtra("author", (book.getAuthors() != null && !book.getAuthors().isEmpty())
-                        ? book.getAuthors().get(0).getName() : "Unknown Author");
-                intent.putExtra("stock", 0);  // Passar o valor do estoque dinamicamente, se disponível
-                intent.putExtra("description", book.getDescription() != null ? book.getDescription() : "No description available");
-                startActivity(intent);
-            });
         } else {
             // Set a placeholder if ISBN is null or empty
             coverImageView.setImageResource(R.drawable.placeholder_image);
+            Log.d("LibraryDetailActivity", "ISBN is null or empty for book: " + book.getTitle());
         }
     }
+
 
 
 
