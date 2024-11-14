@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.dssmv_projectdroid_1221432_1231479.R;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
@@ -74,11 +75,23 @@ public class UserLinkActivity extends AppCompatActivity {
             bookView.setBackgroundResource(R.drawable.book_item_background);
             bookView.setPadding(16, 16, 16, 16);
 
+            // Concatenar nomes dos autores
+            String authorsText = "Unknown";
+            if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+                StringBuilder authorsBuilder = new StringBuilder();
+                for (Author author : book.getAuthors()) {
+                    authorsBuilder.append(author.getName()).append(", ");
+                }
+                // Remove a última vírgula e espaço, se existirem autores
+                authorsText = authorsBuilder.substring(0, authorsBuilder.length() - 2);
+            }
+
+            // Construir a string de exibição
             String displayText = "Title: " + (book.getTitle() != null ? book.getTitle() : "Unknown") + "\n" +
-                    "Author: " + (book.getAuthors() != null ? book.getAuthors() : "Unknown") + "\n";
+                    "Authors: " + authorsText + "\n" +
+                    "ISBN: " + (book.getIsbn() != null ? book.getIsbn() : "Unknown") + "\n";
 
             bookView.setText(displayText);
-
             containerBooks.addView(bookView);
 
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) bookView.getLayoutParams();
@@ -86,6 +99,8 @@ public class UserLinkActivity extends AppCompatActivity {
             bookView.setLayoutParams(params);
         }
     }
+
+
 
     // Método para exibir erros na interface
     private void showError(String message) {
