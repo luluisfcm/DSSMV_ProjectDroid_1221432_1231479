@@ -129,7 +129,7 @@ public class UserLinkActivity extends AppCompatActivity {
             container.addView(horizontalContainer);
 
         }
-    }
+    }//AJSHGDJASGDJASD
 
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
