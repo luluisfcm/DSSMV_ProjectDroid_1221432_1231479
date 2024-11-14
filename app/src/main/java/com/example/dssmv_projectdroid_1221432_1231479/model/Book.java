@@ -16,6 +16,17 @@ public class Book {
     @SerializedName("cover_urls")
     private CoverUrls coverUrls;
 
+    @SerializedName("description")
+    private String description; // Novo campo para a descrição
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public CoverUrls getCoverUrls() {
         return coverUrls;
     }
