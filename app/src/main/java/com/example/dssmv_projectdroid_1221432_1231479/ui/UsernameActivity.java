@@ -9,35 +9,35 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 
-
 public class UsernameActivity extends AppCompatActivity {
 
     private EditText editTextUsername;
-    private Button buttonSubmit;
+    private Button buttonViewUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_username);
 
+        // Atribuir o EditText e Button pelos IDs corretos
         editTextUsername = findViewById(R.id.editText_username);
-        buttonSubmit = findViewById(R.id.button_submit);
+        buttonViewUsers = findViewById(R.id.button_view_users);
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        // Configurar o listener para o botão
+        buttonViewUsers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String username = editTextUsername.getText().toString().trim();
 
                 if (username.isEmpty()) {
-                    Toast.makeText(UsernameActivity.this, "Please enter a username", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UsernameActivity.this, "Por favor, insira um nome de usuário", Toast.LENGTH_SHORT).show();
                 } else {
-                    // Enviar para a próxima Activity ou salvar o nome de usuário
-                    Intent intent = new Intent(UsernameActivity.this, MainActivity.class);
-                    intent.putExtra("username", username);  // Enviar o nome para outra Activity
+                    // Enviar o nome de usuário para UserLinkActivity
+                    Intent intent = new Intent(UsernameActivity.this, UserLinkActivity.class);
+                    intent.putExtra("username", username); // Passando o nome de usuário para a próxima activity
                     startActivity(intent);
                 }
             }
         });
     }
 }
-
