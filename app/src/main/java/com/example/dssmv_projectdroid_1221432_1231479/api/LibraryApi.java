@@ -8,12 +8,7 @@ import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookReq
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
-import retrofit2.http.Body;
-import retrofit2.http.DELETE;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.PUT;
-import retrofit2.http.Path;
+import retrofit2.http.*;
 
 public interface LibraryApi {
 
@@ -30,6 +25,9 @@ public interface LibraryApi {
                        @Body CreateLibraryBookRequest request);
 
 
+
+    @GET("user/checked-out")
+    Call<List<LibraryBook>> getBooksByUser(@Query("userId") String username);
 
     @POST("library")
     Call<Library> addLibrary(@Body Library library);

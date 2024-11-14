@@ -25,13 +25,17 @@
 
         <!-- LibrariesActivity declaration -->
         <activity android:name=".ui.LibrariesActivity"
-        android:label="Bibliotecas"/>
+                  android:label="Bibliotecas"/>
 
         <activity android:name=".ui.LibraryDetailActivity"
                   android:label="Livros"/>
 
         <activity android:name=".ui.BookDetailsActivity"
                   android:label="Detalhes"/>
+
+        <activity android:name=".ui.UsernameActivity"></activity>
+
+        <activity android:name=".ui.UserLinkActivity"></activity>
 
     </application>
 </manifest>

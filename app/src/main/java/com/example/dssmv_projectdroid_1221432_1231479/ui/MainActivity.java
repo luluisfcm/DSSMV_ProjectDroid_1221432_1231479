@@ -1,4 +1,6 @@
-package com.example.dssmv_projectdroid_1221432_1231479.ui;// MainActivity.java
+package com.example.dssmv_projectdroid_1221432_1231479.ui;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -7,8 +9,7 @@ import com.example.dssmv_projectdroid_1221432_1231479.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
-
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,5 +30,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
     }
 }
