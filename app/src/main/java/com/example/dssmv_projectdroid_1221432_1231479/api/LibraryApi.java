@@ -4,6 +4,7 @@ package com.example.dssmv_projectdroid_1221432_1231479.api;
 import java.util.List;
 
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
+import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookRequest;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
@@ -24,7 +25,11 @@ public interface LibraryApi {
     Call<List<LibraryBook>> getBooksByLibraryId(@Path("id") String libraryId);
 
     @POST("library/{libraryId}/book/{isbn}")
-    Call<Void> addBook(@Path("libraryId") String libraryId, @Body String isbn);
+    Call<Void> addBook(@Path("libraryId") String libraryId,
+                       @Path("isbn") String isbn,
+                       @Body CreateLibraryBookRequest request);
+
+
 
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
