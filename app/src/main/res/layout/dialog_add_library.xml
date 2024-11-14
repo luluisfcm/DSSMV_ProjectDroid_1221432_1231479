@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/dialog_add_library.xml -->
+<!-- dialog_add_library.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
               android:padding="16dp">
 
+    <!-- Library Name and Address -->
     <EditText
             android:id="@+id/editTextLibraryName"
             android:layout_width="match_parent"
@@ -18,10 +18,50 @@
             android:layout_height="wrap_content"
             android:hint="Library Address" />
 
+    <!-- Open Status Checkbox -->
     <CheckBox
             android:id="@+id/checkBoxLibraryOpen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Open Status" />
+
+    <!-- Days of the Week Checkboxes -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Open Days" />
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="7">
+
+        <CheckBox android:id="@+id/checkBoxMonday" android:text="Mon" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxTuesday" android:text="Tue" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxWednesday" android:text="Wed" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxThursday" android:text="Thu" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxFriday" android:text="Fri" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxSaturday" android:text="Sat" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <CheckBox android:id="@+id/checkBoxSunday" android:text="Sun" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- Open and Close TimePickers -->
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Opening and Closing Hours" />
+
+    <TimePicker
+            android:id="@+id/timePickerOpenTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner" />
+
+    <TimePicker
+            android:id="@+id/timePickerCloseTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner" />
 
 </LinearLayout>
