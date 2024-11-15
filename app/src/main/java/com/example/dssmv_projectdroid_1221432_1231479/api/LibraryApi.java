@@ -4,6 +4,10 @@ package com.example.dssmv_projectdroid_1221432_1231479.api;
 import java.util.List;
 
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
+import com.example.dssmv_projectdroid_1221432_1231479.model.CheckedOutBook;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Checkout;
+import com.example.dssmv_projectdroid_1221432_1231479.model.CoverUrls;
 import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookRequest;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
@@ -37,4 +41,8 @@ public interface LibraryApi {
 
     @DELETE("library/{id}")
     Call<Void> removeLibrary(@Path("id") String id);
+
+    @POST("books/{isbn}/checkin/{username}")
+    Call<Void> checkInBook(@Path("isbn") String isbn, @Path("username") String username);
+
 }
