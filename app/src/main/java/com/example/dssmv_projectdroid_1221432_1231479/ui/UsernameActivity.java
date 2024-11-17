@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
 
 public class UsernameActivity extends AppCompatActivity {
-
     private EditText editTextUsername;
     private Button buttonViewUsers;
 

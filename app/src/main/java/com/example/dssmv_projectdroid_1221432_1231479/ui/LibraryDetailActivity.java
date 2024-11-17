@@ -13,6 +13,7 @@ import com.example.dssmv_projectdroid_1221432_1231479.R;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
+import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookRequest;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,7 +28,6 @@ import android.text.style.StyleSpan;
 import android.app.AlertDialog;
 import android.widget.EditText;
 import android.text.InputType;
-import android.widget.LinearLayout;
 
 
 public class LibraryDetailActivity extends AppCompatActivity {
@@ -132,7 +132,60 @@ public class LibraryDetailActivity extends AppCompatActivity {
             // Add the horizontal container to the main vertical container
             container.addView(horizontalContainer);
 
+            horizontalContainer.setOnLongClickListener(v -> {
+                showCheckoutDialog(libraryId, libraryBook.getIsbn(), book.getTitle());
+                return true; // Indicate that the event was consumed
+            });
+
         }
+    }
+
+    private void showCheckoutDialog(String libraryId, String isbn, String bookTitle) {
+        new AlertDialog.Builder(this)
+                .setTitle("Checkout")
+                .setMessage("Do you want to checkout the book \"" + bookTitle + "\"?")
+                .setPositiveButton("Yes", (dialog, which) -> showUsernameDialog(libraryId, isbn))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void showUsernameDialog(String libraryId, String isbn) {
+        // Cria uma EditText para a caixa de texto
+        EditText editText = new EditText(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Client's name")
+                .setView(editText) // Define a EditText no corpo da dialog
+                .setPositiveButton("done", (dialog, which) -> {
+                    String username = editText.getText().toString(); // Pega o texto inserido
+                    performCheckout(libraryId, isbn, username); // Passa o texto para o método de checkout
+                })
+                .setNegativeButton("cancel", null)
+                .show();
+    }
+
+    private void performCheckout(String libraryId, String isbn, String username) {
+        // Cria uma instância da API
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+
+        // Faz a chamada ao endpoint de checkout
+        Call<Library> call = api.checkOutBook(libraryId, isbn, username); // Ajuste o libraryId conforme necessário
+
+        call.enqueue(new Callback<Library>() {
+            @Override
+            public void onResponse(Call<Library> call, Response<Library> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(LibraryDetailActivity.this, "Check out was successful!", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    showError("error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Library> call, Throwable t) {
+                showError(t.getMessage());
+            }
+        });
     }
 
     private void showAddBookDialog() {
