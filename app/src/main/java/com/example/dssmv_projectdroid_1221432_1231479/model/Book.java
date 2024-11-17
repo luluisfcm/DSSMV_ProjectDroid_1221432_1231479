@@ -7,14 +7,8 @@ public class Book {
     @SerializedName("title")
     private String title;
 
-    @SerializedName("authors")
-    private List<Author> authors;
-
     @SerializedName("isbn")
     private String isbn;
-
-    @SerializedName("cover_urls")
-    private CoverUrls coverUrls;
 
     @SerializedName("description")
     private String description; // Novo campo para a descrição
@@ -27,26 +21,10 @@ public class Book {
         this.description = description;
     }
 
-    public CoverUrls getCoverUrls() {
-        return coverUrls;
-    }
-
-    public void setCoverUrls(CoverUrls coverUrls) {
-        this.coverUrls = coverUrls;
-    }
-
     public String getTitle() {return title;}
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<Author> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(List<Author> authors) {
-        this.authors = authors;
     }
 
     public String getIsbn() {
