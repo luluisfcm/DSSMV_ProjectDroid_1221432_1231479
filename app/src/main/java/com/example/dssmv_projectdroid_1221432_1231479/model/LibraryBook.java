@@ -2,9 +2,17 @@ package com.example.dssmv_projectdroid_1221432_1231479.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 public class LibraryBook {
     @SerializedName("id")
     private String id;
+
+    @SerializedName("bookId")
+    private String isbn_book;
+
+    @SerializedName("dueDate")
+    private String dueDate;
 
     @SerializedName("isbn")
     private String isbn;
@@ -23,6 +31,10 @@ public class LibraryBook {
         return isbn;
     }
 
+    public String getIsbn_book() {
+        return isbn_book;
+    }
+
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -38,7 +50,13 @@ public class LibraryBook {
     public int getStock() {
         return stock;
     }
+    public String getDueDate() {
+        return dueDate;
+    }
 
+    public void setDueDate(String dueDate) {
+        this.dueDate = dueDate;
+    }
     public void setStock(int stock) {
         this.stock = stock;
     }

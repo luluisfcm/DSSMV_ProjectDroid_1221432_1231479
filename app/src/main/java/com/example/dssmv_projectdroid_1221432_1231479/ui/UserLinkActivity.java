@@ -100,7 +100,7 @@ public class UserLinkActivity extends AppCompatActivity {
             coverImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             // Fetch and set the cover for the book
-            fetchBookCover(libraryBook.getIsbn(), book, coverImageView);  // Pass the ISBN and Book object
+            fetchBookCover(libraryBook.getIsbn_book(), book, coverImageView);  // Pass the ISBN and Book object
 
             // Create TextView for book details
             TextView bookDetails = new TextView(this);
@@ -118,7 +118,7 @@ public class UserLinkActivity extends AppCompatActivity {
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
             data.append("Author: ").append(authorName).append("\n");
-            data.append("Stock: ").append(String.valueOf(libraryBook.getStock())).append("\n");
+            data.append("Entregar até: ").append(libraryBook.getDueDate()).append("\n");
             bookDetails.setText(data);
 
             // Add ImageView and TextView to the horizontal container
@@ -129,12 +129,12 @@ public class UserLinkActivity extends AppCompatActivity {
             container.addView(horizontalContainer);
 
         }
-    }//AJSHGDJASGDJASD
+    }
 
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
             // Construct the cover URL with the ISBN
-            String coverUrl = "http://193.136.62.24/v1/assets/cover/" + isbn + "-S.jpg";
+            String coverUrl = "http://193.136.62.24/v1/assets/cover/" + isbn + "-L.jpg";
             Log.d("LibraryDetailActivity", "Cover URL for book: " + book.getTitle() + " - " + coverUrl);
 
             // Load the image using Glide, with a placeholder image if it fails
@@ -149,10 +149,6 @@ public class UserLinkActivity extends AppCompatActivity {
             Log.d("LibraryDetailActivity", "ISBN is null or empty for book: " + book.getTitle());
         }
     }
-
-
-
-
 
     // Método para exibir erros na interface
     private void showError(String message) {
