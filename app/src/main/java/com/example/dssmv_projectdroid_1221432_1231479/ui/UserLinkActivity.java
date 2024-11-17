@@ -1,6 +1,5 @@
 package com.example.dssmv_projectdroid_1221432_1231479.ui;
 
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -11,24 +10,24 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.dssmv_projectdroid_1221432_1231479.R;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
 import com.example.dssmv_projectdroid_1221432_1231479.api.LibraryApi;
 import com.example.dssmv_projectdroid_1221432_1231479.api.RetrofitClient;
 
 import java.util.List;
 
+import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserLinkActivity extends AppCompatActivity {
-
     private LinearLayout containerBooks;
     private String username;
 
@@ -52,63 +51,65 @@ public class UserLinkActivity extends AppCompatActivity {
 
     // Método para procurar os livros do usuário através da API
     private void fetchBooksByUser(String username) {
+        Log.d("UserLinkActivity", "Fetching books for user: " + username);
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
 
-        // A chamada correta agora retorna Call<List<Book>>:
         Call<List<LibraryBook>> call = api.getBooksByUser(username);
 
         call.enqueue(new Callback<List<LibraryBook>>() {
             @Override
             public void onResponse(Call<List<LibraryBook>> call, Response<List<LibraryBook>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    displayBooks(response.body());  // Se os livros forem retornados com sucesso, exibe-os
+                    Log.d("UserLinkActivity", "Books fetched successfully: " + response.body().size());
+                    displayBooks(response.body());
                 } else {
-                    showError("Erro: " + response.code());  // Caso ocorra algum erro na resposta
+                    Log.d("UserLinkActivity", "Error fetching books: " + response.code());
+                    showError("Erro: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<List<LibraryBook>> call, Throwable throwable) {
-                showError("Erro: " + throwable.getMessage());  // Caso falhe na comunicação com a API
+                Log.d("UserLinkActivity", "Failed to fetch books: " + throwable.getMessage());
+                showError("Erro: " + throwable.getMessage());
             }
         });
     }
 
+
     // Método para exibir os livros na interface
     private void displayBooks(List<LibraryBook> books) {
         LinearLayout container = findViewById(R.id.containerBooks);
-        container.removeAllViews(); // Clear any existing views
-        Log.d("LibraryDetailActivity", "Displaying books: " + books.size());  // Verifique o número de livros
+        container.removeAllViews(); // Clear existing views
+        Log.d("UserLinkActivity", "Displaying books: " + books.size());
 
         for (LibraryBook libraryBook : books) {
-            Book book = libraryBook.getBook();  // Get the Book object
-
-            // Create a Horizontal layout to display the image and text
+            Book book = libraryBook.getBook();
+            String libraryId = libraryBook.getLibraryId();
+            // Create a horizontal container
             LinearLayout horizontalContainer = new LinearLayout(this);
             horizontalContainer.setOrientation(LinearLayout.HORIZONTAL);
             horizontalContainer.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             ));
-            horizontalContainer.setPadding(0, 0, 0, 16); // Padding between items
+            horizontalContainer.setPadding(0, 0, 0, 16);
 
-            // Create ImageView for the book cover
+            // ImageView for the book cover
             ImageView coverImageView = new ImageView(this);
-            LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(200, 300); // Set image size
+            LinearLayout.LayoutParams imageParams = new LinearLayout.LayoutParams(200, 300);
             coverImageView.setLayoutParams(imageParams);
             coverImageView.setPadding(8, 8, 8, 8);
             coverImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // Fetch and set the cover for the book
-            fetchBookCover(libraryBook.getIsbn_book(), book, coverImageView);  // Pass the ISBN and Book object
+            fetchBookCover(libraryBook.getIsbn_book(), book, coverImageView);
 
-            // Create TextView for book details
+            // TextView for book details
             TextView bookDetails = new TextView(this);
             bookDetails.setTextSize(16);
             bookDetails.setTextColor(getResources().getColor(android.R.color.black));
-            bookDetails.setPadding(16, 0, 0, 0); // Padding between image and text
+            bookDetails.setPadding(16, 0, 0, 0);
 
-            // Use SpannableStringBuilder to make the title bold
             SpannableStringBuilder data = new SpannableStringBuilder();
             String titleText = "Title: " + book.getTitle() + "\n";
             data.append(titleText);
@@ -118,18 +119,64 @@ public class UserLinkActivity extends AppCompatActivity {
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
             data.append("Author: ").append(authorName).append("\n");
-            data.append("Entregar até: ").append(libraryBook.getDueDate()).append("\n");
+
+            String dueDate = libraryBook.getDueDate();
+            String formattedDate = dueDate.split("T")[0];
+            data.append("Due date: ").append(formattedDate).append("\n");
             bookDetails.setText(data);
 
-            // Add ImageView and TextView to the horizontal container
+            // Add click listeners
+            horizontalContainer.setOnLongClickListener(v -> {
+                showCheckInDialog(libraryId, libraryBook.getIsbn_book(), book.getTitle());
+                return true; // Indicate that the event was consumed
+            });
+
             horizontalContainer.addView(coverImageView);
             horizontalContainer.addView(bookDetails);
-
-            // Add the horizontal container to the main vertical container
             container.addView(horizontalContainer);
-
         }
     }
+
+    private void showCheckInDialog(String libraryId, String isbn, String bookTitle) {
+        new AlertDialog.Builder(this)
+                .setTitle("Check in do Livro")
+                .setMessage("Deseja fazer o checkin do livro \"" + bookTitle + "\"?")
+                .setPositiveButton("Sim", (dialog, which) -> performCheckIn(libraryId, isbn))
+                .setNegativeButton("Não", null)
+                .show();
+    }
+
+    private void performCheckIn(String libraryId, String isbn) {
+        // Cria uma instância da API
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+
+        // Faz a chamada ao endpoint de checkIn
+        libraryId = libraryId.substring(0, 8) + "-" +
+                libraryId.substring(8, 12) + "-" +
+                libraryId.substring(12, 16) + "-" +
+                libraryId.substring(16, 20) + "-" +
+                libraryId.substring(20, 32);
+
+        Call<Library> call = api.checkInBook(libraryId, isbn, username);
+
+        call.enqueue(new Callback<Library>() {
+            @Override
+            public void onResponse(Call<Library> call, Response<Library> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(UserLinkActivity.this, "Check in realizado com sucesso!", Toast.LENGTH_SHORT).show();
+                    fetchBooksByUser(username);
+                } else {
+                    Toast.makeText(UserLinkActivity.this, "Erro ao realizar o check in: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<Library> call, Throwable t) {
+                fetchBooksByUser(username);
+                //Toast.makeText(UserLinkActivity.this, "Falha na comunicação: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {

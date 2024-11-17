@@ -2,12 +2,6 @@
 package com.example.dssmv_projectdroid_1221432_1231479.api;
 
 import java.util.List;
-
-import com.example.dssmv_projectdroid_1221432_1231479.model.Book;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Author;
-import com.example.dssmv_projectdroid_1221432_1231479.model.CheckedOutBook;
-import com.example.dssmv_projectdroid_1221432_1231479.model.Checkout;
-import com.example.dssmv_projectdroid_1221432_1231479.model.CoverUrls;
 import com.example.dssmv_projectdroid_1221432_1231479.model.CreateLibraryBookRequest;
 import com.example.dssmv_projectdroid_1221432_1231479.model.Library;
 import com.example.dssmv_projectdroid_1221432_1231479.model.LibraryBook;
@@ -34,16 +28,24 @@ public interface LibraryApi {
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
 
-    @POST("library/{libraryId}/book/{isbn}/checkout?userId={user}")
-    Call<Library> checkOutBook(@Body Library library);
+    @POST("library/{libraryId}/book/{isbn}/checkin")
+    Call<Library> checkInBook(
+            @Path("libraryId") String libraryId,
+            @Path("isbn") String isbn,
+            @Query("userId") String userId
+    );
+
+    @POST("library/{libraryId}/book/{isbn}/checkout")
+    Call<Library> checkOutBook(
+            @Path("libraryId") String libraryId,
+            @Path("isbn") String isbn,
+            @Query("userId") String userId
+    );
+
 
     @PUT("library/{id}")
     Call<Library> updateLibrary(@Path("id") String id, @Body Library library);
 
     @DELETE("library/{id}")
     Call<Void> removeLibrary(@Path("id") String id);
-
-    @POST("books/{isbn}/checkin/{username}")
-    Call<Void> checkInBook(@Path("isbn") String isbn, @Path("username") String username);
-
 }

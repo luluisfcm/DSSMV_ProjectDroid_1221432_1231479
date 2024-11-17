@@ -8,6 +8,9 @@ public class LibraryBook {
     @SerializedName("id")
     private String id;
 
+    @SerializedName("libraryId")
+    private String libraryId;
+
     @SerializedName("bookId")
     private String isbn_book;
 
@@ -25,6 +28,9 @@ public class LibraryBook {
 
     public String getId() {
         return id;
+    }
+    public String getLibraryId() {
+        return libraryId;
     }
 
     public String getIsbn() {
