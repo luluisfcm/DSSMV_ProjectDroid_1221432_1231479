@@ -274,12 +274,10 @@ public class LibrariesActivity extends AppCompatActivity {
         // Inicialize os campos do diálogo
         EditText editTextName = dialogView.findViewById(R.id.editTextEditLibraryName);
         EditText editTextAddress = dialogView.findViewById(R.id.editTextEditLibraryAddress);
-        CheckBox checkBoxOpen = dialogView.findViewById(R.id.checkBoxEditLibraryOpen);
 
         // Preencha os campos com os dados atuais da biblioteca
         editTextName.setText(library.getName());
         editTextAddress.setText(library.getAddress());
-        checkBoxOpen.setChecked(library.isOpen());
 
         // Crie o diálogo
         new AlertDialog.Builder(this)
@@ -289,11 +287,9 @@ public class LibrariesActivity extends AppCompatActivity {
                     // Atualize os valores da biblioteca
                     String updatedName = editTextName.getText().toString().trim();
                     String updatedAddress = editTextAddress.getText().toString().trim();
-                    boolean isOpen = checkBoxOpen.isChecked();
 
                     library.setName(updatedName);
                     library.setAddress(updatedAddress);
-                    library.setOpen(isOpen);
 
                     // Envie a atualização para o servidor
                     updateLibrary(library);
