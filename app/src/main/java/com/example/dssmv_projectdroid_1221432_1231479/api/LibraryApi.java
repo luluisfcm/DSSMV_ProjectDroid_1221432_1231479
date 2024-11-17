@@ -28,13 +28,14 @@ public interface LibraryApi {
                        @Path("isbn") String isbn,
                        @Body CreateLibraryBookRequest request);
 
-
-
     @GET("user/checked-out")
     Call<List<LibraryBook>> getBooksByUser(@Query("userId") String username);
 
     @POST("library")
     Call<Library> addLibrary(@Body Library library);
+
+    @POST("library/{libraryId}/book/{isbn}/checkout?userId={user}")
+    Call<Library> checkOutBook(@Body Library library);
 
     @PUT("library/{id}")
     Call<Library> updateLibrary(@Path("id") String id, @Body Library library);

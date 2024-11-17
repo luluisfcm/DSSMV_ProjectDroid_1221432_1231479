@@ -1,4 +1,5 @@
 package com.example.dssmv_projectdroid_1221432_1231479.ui;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +20,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import android.util.Log;
 import android.app.AlertDialog;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class LibrariesActivity extends AppCompatActivity {
     private List<Library> libraries;
@@ -86,7 +90,25 @@ public class LibrariesActivity extends AppCompatActivity {
             libraryView.setText(data);
 
             libraryView.setOnLongClickListener(v -> {
-                showDeleteConfirmationDialog(library);
+                // Cria um PopupMenu
+                PopupMenu popupMenu = new PopupMenu(this, v);
+                popupMenu.getMenu().add("Edit");
+                popupMenu.getMenu().add("Delete");
+
+                // Define o listener para as opções do menu
+                popupMenu.setOnMenuItemClickListener(item -> {
+                    if (item.getTitle().equals("Edit")) {
+                        // Ação para Editar
+                        editLibrary(library);
+                    } else if (item.getTitle().equals("Delete")) {
+                        // Ação para Deletar
+                        showDeleteConfirmationDialog(library);
+                    }
+                    return true;
+                });
+
+                // Exibe o menu
+                popupMenu.show();
                 return true;
             });
 
@@ -142,66 +164,85 @@ public class LibrariesActivity extends AppCompatActivity {
     }
 
     private void addLibrary() {
-        // Inflate the dialog layout
+        String[] openTime = {""};
+        String[] closeTime = {""};
+        boolean[] selectedDays = new boolean[7];
+        String[] daysOfWeek = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_add_library, null);
 
-        // Initialize views in the dialog
         EditText editTextLibraryName = dialogView.findViewById(R.id.editTextLibraryName);
         EditText editTextLibraryAddress = dialogView.findViewById(R.id.editTextLibraryAddress);
-        CheckBox checkBoxLibraryOpen = dialogView.findViewById(R.id.checkBoxLibraryOpen);
 
-        CheckBox checkBoxMonday = dialogView.findViewById(R.id.checkBoxMonday);
-        CheckBox checkBoxTuesday = dialogView.findViewById(R.id.checkBoxTuesday);
-        CheckBox checkBoxWednesday = dialogView.findViewById(R.id.checkBoxWednesday);
-        CheckBox checkBoxThursday = dialogView.findViewById(R.id.checkBoxThursday);
-        CheckBox checkBoxFriday = dialogView.findViewById(R.id.checkBoxFriday);
-        CheckBox checkBoxSaturday = dialogView.findViewById(R.id.checkBoxSaturday);
-        CheckBox checkBoxSunday = dialogView.findViewById(R.id.checkBoxSunday);
+        Button btnSelectOpenTime = dialogView.findViewById(R.id.btnSelectOpenTime);
+        Button btnSelectCloseTime = dialogView.findViewById(R.id.btnSelectCloseTime);
+        Button btnSelectOpenDays = dialogView.findViewById(R.id.btnSelectOpenDays);
 
-        TimePicker timePickerOpenTime = dialogView.findViewById(R.id.timePickerOpenTime);
-        TimePicker timePickerCloseTime = dialogView.findViewById(R.id.timePickerCloseTime);
+        btnSelectOpenTime.setOnClickListener(v -> {
+            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+                openTime[0] = String.format("%02d:%02d", hourOfDay, minute);
+                btnSelectOpenTime.setText(openTime[0]); // Atualiza o texto do botão
+            }, 0, 0, true).show();
+        });
 
-        // Create and show the AlertDialog
+        btnSelectCloseTime.setOnClickListener(v -> {
+            new TimePickerDialog(this, (view, hourOfDay, minute) -> {
+                closeTime[0] = String.format("%02d:%02d:00", hourOfDay, minute);
+                btnSelectCloseTime.setText(closeTime[0]); // Atualiza o texto do botão
+            }, 0, 0, true).show();
+        });
+
+        btnSelectOpenDays.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Select Open Days");
+            builder.setMultiChoiceItems(daysOfWeek, selectedDays, (dialog, which, isChecked) -> {
+                selectedDays[which] = isChecked; // Atualiza a seleção
+            });
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                StringBuilder openDays = new StringBuilder();
+                for (int i = 0; i < daysOfWeek.length; i++) {
+                    if (selectedDays[i]) {
+                        if (openDays.length() > 0) {
+                            openDays.append(", ");
+                        }
+                        openDays.append(daysOfWeek[i]);
+                    }
+                }
+                btnSelectOpenDays.setText(openDays.length() > 0 ? openDays.toString() : "Select Days");
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+            builder.create().show();
+        });
+
         new AlertDialog.Builder(this)
                 .setTitle("Add New Library")
                 .setView(dialogView)
                 .setPositiveButton("Add", (dialog, which) -> {
-                    // Gather input data
                     String libraryName = editTextLibraryName.getText().toString().trim();
                     String libraryAddress = editTextLibraryAddress.getText().toString().trim();
-                    boolean isOpen = checkBoxLibraryOpen.isChecked();
 
-                    // Collect selected days
                     StringBuilder openDaysBuilder = new StringBuilder();
-                    if (checkBoxMonday.isChecked()) openDaysBuilder.append("Mon ");
-                    if (checkBoxTuesday.isChecked()) openDaysBuilder.append("Tue ");
-                    if (checkBoxWednesday.isChecked()) openDaysBuilder.append("Wed ");
-                    if (checkBoxThursday.isChecked()) openDaysBuilder.append("Thu ");
-                    if (checkBoxFriday.isChecked()) openDaysBuilder.append("Fri ");
-                    if (checkBoxSaturday.isChecked()) openDaysBuilder.append("Sat ");
-                    if (checkBoxSunday.isChecked()) openDaysBuilder.append("Sun ");
+                    for (int i = 0; i < daysOfWeek.length; i++) {
+                        if (selectedDays[i]) {
+                            if (openDaysBuilder.length() > 0) {
+                                openDaysBuilder.append(", ");
+                            }
+                            openDaysBuilder.append(daysOfWeek[i]);
+                        }
+                    }
 
-                    String openDays = openDaysBuilder.toString().trim();
-
-                    // Collect selected times from TimePickers
-                    int openHour = timePickerOpenTime.getHour();
-                    int openMinute = timePickerOpenTime.getMinute();
-                    int closeHour = timePickerCloseTime.getHour();
-                    int closeMinute = timePickerCloseTime.getMinute();
-
-                    String openStatement = String.format("%02d:%02d - %02d:%02d",
-                            openHour, openMinute, closeHour, closeMinute);
-
-                    // Create Library object with collected data
+                    // Cria um objeto Library com os dados preenchidos
                     Library newLibrary = new Library();
                     newLibrary.setName(libraryName);
                     newLibrary.setAddress(libraryAddress);
-                    newLibrary.setOpen(isOpen);
-                    newLibrary.setOpenDays(openDays);
-                    newLibrary.setOpenStatement(openStatement);
+                    newLibrary.setOpenTime(openTime[0]); // Define o horário de abertura
+                    newLibrary.setCloseTime(closeTime[0]); // Define o horário de fechamento
+                    newLibrary.setOpenDays(openDaysBuilder.toString().trim());
 
-                    // Call API to add library
+                    // Chama a API para adicionar a biblioteca
                     LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
                     Call<Library> call = api.addLibrary(newLibrary);
                     call.enqueue(new Callback<Library>() {
@@ -209,7 +250,7 @@ public class LibrariesActivity extends AppCompatActivity {
                         public void onResponse(Call<Library> call, Response<Library> response) {
                             if (response.isSuccessful()) {
                                 Toast.makeText(LibrariesActivity.this, "Library added!", Toast.LENGTH_SHORT).show();
-                                fetchLibraries(); // Refresh library list
+                                fetchLibraries(); // Atualiza a lista de bibliotecas
                             } else {
                                 showError("Failed to add library: " + response.message());
                             }
@@ -223,6 +264,64 @@ public class LibrariesActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.cancel())
                 .show();
+    }
+
+    private void editLibrary(Library library) {
+        // Inflate o layout do diálogo de edição
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_edit_library, null);
+
+        // Inicialize os campos do diálogo
+        EditText editTextName = dialogView.findViewById(R.id.editTextEditLibraryName);
+        EditText editTextAddress = dialogView.findViewById(R.id.editTextEditLibraryAddress);
+        CheckBox checkBoxOpen = dialogView.findViewById(R.id.checkBoxEditLibraryOpen);
+
+        // Preencha os campos com os dados atuais da biblioteca
+        editTextName.setText(library.getName());
+        editTextAddress.setText(library.getAddress());
+        checkBoxOpen.setChecked(library.isOpen());
+
+        // Crie o diálogo
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Library")
+                .setView(dialogView)
+                .setPositiveButton("Save", (dialog, which) -> {
+                    // Atualize os valores da biblioteca
+                    String updatedName = editTextName.getText().toString().trim();
+                    String updatedAddress = editTextAddress.getText().toString().trim();
+                    boolean isOpen = checkBoxOpen.isChecked();
+
+                    library.setName(updatedName);
+                    library.setAddress(updatedAddress);
+                    library.setOpen(isOpen);
+
+                    // Envie a atualização para o servidor
+                    updateLibrary(library);
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+    }
+
+    private void updateLibrary(Library library) {
+        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
+        Call<Library> call = api.updateLibrary(library.getId(), library);
+
+        call.enqueue(new Callback<Library>() {
+            @Override
+            public void onResponse(Call<Library> call, Response<Library> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(LibrariesActivity.this, "Library updated successfully!", Toast.LENGTH_SHORT).show();
+                    fetchLibraries(); // Atualize a lista de bibliotecas
+                } else {
+                    showError("Failed to update library: " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Library> call, Throwable t) {
+                showError("Error: " + t.getMessage());
+            }
+        });
     }
 
     private void showError(String message) {

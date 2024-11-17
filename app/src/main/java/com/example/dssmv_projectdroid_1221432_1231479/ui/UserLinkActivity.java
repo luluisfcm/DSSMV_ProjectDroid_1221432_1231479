@@ -127,8 +127,9 @@ public class UserLinkActivity extends AppCompatActivity {
             coverImageView.setPadding(8, 8, 8, 8);
             coverImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-            // Busca e define a capa para o livro
-            fetchBookCover(libraryBook.getIsbn(), book, coverImageView);
+
+            // Fetch and set the cover for the book
+            fetchBookCover(libraryBook.getIsbn_book(), book, coverImageView);  // Pass the ISBN and Book object
 
             // Cria o TextView para os detalhes do livro
             TextView bookDetails = new TextView(this);
@@ -146,7 +147,7 @@ public class UserLinkActivity extends AppCompatActivity {
                     ? book.getAuthors().get(0).getName()
                     : "Unknown Author";
             data.append("Author: ").append(authorName).append("\n");
-            data.append("Stock: ").append(String.valueOf(libraryBook.getStock())).append("\n");
+            data.append("Entregar até: ").append(libraryBook.getDueDate()).append("\n");
             bookDetails.setText(data);
 
             // Cria o botão Check-in para o livro
@@ -169,7 +170,11 @@ public class UserLinkActivity extends AppCompatActivity {
 
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
-            String coverUrl = "http://193.136.62.24/v1/assets/cover/" + isbn + "-S.jpg";
+            // Construct the cover URL with the ISBN
+            String coverUrl = "http://193.136.62.24/v1/assets/cover/" + isbn + "-L.jpg";
+            Log.d("LibraryDetailActivity", "Cover URL for book: " + book.getTitle() + " - " + coverUrl);
+
+            // Load the image using Glide, with a placeholder image if it fails
             Glide.with(this)
                     .load(coverUrl)
                     .placeholder(R.drawable.placeholder_image)
@@ -179,43 +184,8 @@ public class UserLinkActivity extends AppCompatActivity {
             coverImageView.setImageResource(R.drawable.placeholder_image);
         }
     }
-
-
-    private void checkInBook(final String isbn, final String username, final LinearLayout horizontalContainer, final Button checkInButton) {
-        // Verifica se o ISBN é válido (não nulo e não vazio)
-        if (isbn == null || isbn.isEmpty()) {
-            Toast.makeText(UserLinkActivity.this, "ISBN inválido", Toast.LENGTH_SHORT).show();
-            return;  // Retorna para não continuar a execução da API
-        }
-
-        LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
-        Call<Void> call = api.checkInBook(isbn, username);
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(UserLinkActivity.this, "Livro devolvido com sucesso", Toast.LENGTH_SHORT).show();
-
-                    // Atualiza a interface após o sucesso
-                    containerBooks.removeView(horizontalContainer); // Remove o livro da lista
-
-                    checkInButton.setEnabled(false); // Desabilita o botão de check-in
-                    checkInButton.setText("Devolvido"); // Altera o texto do botão
-                    checkInButton.setBackgroundColor(Color.GRAY); // Muda a cor para indicar que foi desabilitado
-                } else {
-                    showError("Erro: " + response.code()); // Exibe código de erro
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-                showError("Erro: " + throwable.getMessage()); // Exibe erro se falhar
-            }
-        });
-    }
-
-
+  
+    // Método para exibir erros na interface
     private void showError(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

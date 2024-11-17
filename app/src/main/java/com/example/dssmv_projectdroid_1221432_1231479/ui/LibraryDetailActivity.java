@@ -103,7 +103,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
             coverImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
             // Fetch and set the cover for the book
-            fetchBookCover(libraryBook.getIsbn(), book, coverImageView);  // Pass the ISBN and Book object
+            fetchBookCover(libraryBook.getIsbn(), book, coverImageView, libraryBook.getStock());  // Pass the ISBN and Book object
 
             // Create TextView for book details
             TextView bookDetails = new TextView(this);
@@ -217,10 +217,10 @@ public class LibraryDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
+    private void fetchBookCover(String isbn, Book book, ImageView coverImageView, int stock) {
         if (isbn != null && !isbn.isEmpty()) {
             // Construct the cover URL with the ISBN
-            String coverUrl = "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-S.jpg";
+            String coverUrl = "http://193.136.62.24/v1/" + "assets/cover/" + isbn + "-L.jpg";
             Log.d("LibraryDetailActivity", "Cover URL for book: " + book.getTitle() + " - " + coverUrl);
 
             // Load the image using Glide, with a placeholder image if it fails
@@ -233,11 +233,11 @@ public class LibraryDetailActivity extends AppCompatActivity {
             // Set an OnClickListener to open details on image click
             coverImageView.setOnClickListener(v -> {
                 Intent intent = new Intent(this, BookDetailsActivity.class);
-                intent.putExtra("coverUrl", "http://193.136.62.24/v1/assets/cover/" + isbn + "-m.jpg");
+                intent.putExtra("isbn", isbn);
                 intent.putExtra("title", book.getTitle());
                 intent.putExtra("author", (book.getAuthors() != null && !book.getAuthors().isEmpty())
                         ? book.getAuthors().get(0).getName() : "Unknown Author");
-                intent.putExtra("stock", 0);  // Passar o valor do estoque dinamicamente, se disponível
+                intent.putExtra("stock", stock);  // Passar o valor do estoque dinamicamente, se disponível
                 intent.putExtra("description", book.getDescription() != null ? book.getDescription() : "No description available");
                 startActivity(intent);
             });

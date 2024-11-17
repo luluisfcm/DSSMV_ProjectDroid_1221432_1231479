@@ -2,14 +2,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+    <!-- Logo at the top -->
+    <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="teste" />
+
+    <!-- Button to view libraries -->
     <Button
             android:id="@+id/button_view_libraries"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="View Libraries"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="100dp" />
+            android:layout_below="@id/logoImageView"
+            android:layout_marginTop="1dp" />
 
+    <!-- Button to view users -->
     <Button
             android:id="@+id/button_view_users"
             android:layout_width="wrap_content"
@@ -17,5 +29,5 @@
             android:text="View Users"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/button_view_libraries"
-            android:layout_marginTop="50dp" />
+            android:layout_marginTop="10dp" />
 </RelativeLayout>

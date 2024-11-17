@@ -1,11 +1,10 @@
-<!-- dialog_add_library.xml -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-              android:padding="16dp">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- Library Name and Address -->
     <EditText
             android:id="@+id/editTextLibraryName"
             android:layout_width="match_parent"
@@ -16,52 +15,59 @@
             android:id="@+id/editTextLibraryAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Library Address" />
+            android:hint="Address" />
 
-    <!-- Open Status Checkbox -->
-    <CheckBox
-            android:id="@+id/checkBoxLibraryOpen"
-            android:layout_width="wrap_content"
+    <!-- Botões para horários -->
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Open Status" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
 
-    <!-- Days of the Week Checkboxes -->
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Open Days" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Time: " />
+
+        <Button
+                android:id="@+id/btnSelectOpenTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Time" />
+    </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="7">
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
 
-        <CheckBox android:id="@+id/checkBoxMonday" android:text="Mon" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxTuesday" android:text="Tue" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxWednesday" android:text="Wed" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxThursday" android:text="Thu" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxFriday" android:text="Fri" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxSaturday" android:text="Sat" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-        <CheckBox android:id="@+id/checkBoxSunday" android:text="Sun" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Close Time: " />
+
+        <Button
+                android:id="@+id/btnSelectCloseTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Time" />
     </LinearLayout>
-
-    <!-- Open and Close TimePickers -->
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Select Opening and Closing Hours" />
-
-    <TimePicker
-            android:id="@+id/timePickerOpenTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:timePickerMode="spinner" />
-
-    <TimePicker
-            android:id="@+id/timePickerCloseTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:timePickerMode="spinner" />
-
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  android:gravity="center_vertical"
+                  android:layout_marginTop="8dp">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open Days: " />
+        <Button
+                android:id="@+id/btnSelectOpenDays"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Days" />
+    </LinearLayout>
 </LinearLayout>
