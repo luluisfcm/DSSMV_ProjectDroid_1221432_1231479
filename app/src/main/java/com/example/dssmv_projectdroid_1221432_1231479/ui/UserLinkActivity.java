@@ -43,7 +43,7 @@ public class UserLinkActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         // Verifica se o username foi passado corretamente
         if (username != null) {
-            fetchBooksByUser(username);  // Chama o método para buscar livros pelo nome de usuário
+            fetchBooksByUser(username);
         } else {
             Toast.makeText(this, "Username não fornecido", Toast.LENGTH_SHORT).show();
         }
@@ -139,8 +139,8 @@ public class UserLinkActivity extends AppCompatActivity {
 
     private void showCheckInDialog(String libraryId, String isbn, String bookTitle) {
         new AlertDialog.Builder(this)
-                .setTitle("Check in do Livro")
-                .setMessage("Deseja fazer o checkin do livro \"" + bookTitle + "\"?")
+                .setTitle("Check in")
+                .setMessage("Do you want to check in the book \"" + bookTitle + "\"?")
                 .setPositiveButton("Sim", (dialog, which) -> performCheckIn(libraryId, isbn))
                 .setNegativeButton("Não", null)
                 .show();
