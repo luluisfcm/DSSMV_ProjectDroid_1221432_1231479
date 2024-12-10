@@ -177,7 +177,6 @@ public class UserLinkActivity extends AppCompatActivity {
         });
     }
 
-
     private void fetchBookCover(String isbn, Book book, ImageView coverImageView) {
         if (isbn != null && !isbn.isEmpty()) {
             // Construct the cover URL with the ISBN
