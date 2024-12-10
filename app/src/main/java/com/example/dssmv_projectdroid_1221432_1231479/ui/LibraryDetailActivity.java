@@ -168,7 +168,7 @@ public class LibraryDetailActivity extends AppCompatActivity {
         LibraryApi api = RetrofitClient.getClient("http://193.136.62.24/v1/").create(LibraryApi.class);
 
         // Faz a chamada ao endpoint de checkout
-        Call<Library> call = api.checkOutBook(libraryId, isbn, username); // Ajuste o libraryId conforme necessário
+        Call<Library> call = api.checkOutBook(libraryId, isbn, username);
 
         call.enqueue(new Callback<Library>() {
             @Override

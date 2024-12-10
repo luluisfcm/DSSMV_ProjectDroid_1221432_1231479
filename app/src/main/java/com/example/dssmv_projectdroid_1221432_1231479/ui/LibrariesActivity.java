@@ -188,7 +188,7 @@ public class LibrariesActivity extends AppCompatActivity {
 
         btnSelectCloseTime.setOnClickListener(v -> {
             new TimePickerDialog(this, (view, hourOfDay, minute) -> {
-                closeTime[0] = String.format("%02d:%02d:00", hourOfDay, minute);
+                closeTime[0] = String.format("%02d:%02d", hourOfDay, minute);
                 btnSelectCloseTime.setText(closeTime[0]); // Atualiza o texto do botão
             }, 0, 0, true).show();
         });
